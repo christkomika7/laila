@@ -1,5 +1,6 @@
 import Footer from "#/components/footer";
 import Header from "#/components/header";
+import { DonationForm } from "#/components/payment/donation";
 import { StripePaymentForm } from "#/components/payment/stripe-payment";
 import VideoAssetDisplay from "#/components/ui/video-asset-display";
 import apiServerClient from "#/lib/api";
@@ -684,9 +685,6 @@ function RouteComponent() {
   const [operator, setOperator] = useState("");
   const [msisdn, setMsisdn] = useState("");
   // Card
-  const [cardNumber, setCardNumber] = useState("");
-  const [expiry, setExpiry] = useState("");
-  const [cvc, setCvc] = useState("");
   const [cardName, setCardName] = useState("");
   const [billingCountry, setBillingCountry] = useState("");
 
@@ -719,18 +717,6 @@ function RouteComponent() {
       pollingAbortRef.current?.abort();
     };
   }, []);
-
-  const formatCardNumber = (v: string) =>
-    v
-      .replace(/\D/g, "")
-      .slice(0, 16)
-      .replace(/(.{4})/g, "$1 ")
-      .trim();
-
-  const formatExpiry = (v: string) => {
-    const d = v.replace(/\D/g, "").slice(0, 4);
-    return d.length > 2 ? d.slice(0, 2) + "/" + d.slice(2) : d;
-  };
 
   const handleRemoveItem = (id: string, title: string) => {
     removeItem(id);
@@ -891,33 +877,38 @@ function RouteComponent() {
     return (
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col text-white">
         <Header />
-        <main className="grow flex items-center justify-center px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center space-y-4 max-w-sm"
-          >
+        <main className="grow flex items-center justify-center px-4 py-16">
+          <div className="w-full max-w-md space-y-4">
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center space-y-4"
             >
-              <CheckCircle2 className="w-20 h-20 text-emerald-500 mx-auto" />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
+              >
+                <CheckCircle2 className="w-20 h-20 text-emerald-500 mx-auto" />
+              </motion.div>
+              <h2 className="text-3xl font-bold text-white font-display">
+                Paiement réussi !
+              </h2>
+              <p className="text-neutral-400">Un reçu a été envoyé à {email}</p>
+              <p className="text-neutral-600 text-xs font-mono">
+                {transactionId}
+              </p>
+              <button
+                onClick={() => navigate({ to: "/" })}
+                className="mt-4 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition-all"
+              >
+                Retour à l'accueil
+              </button>
             </motion.div>
-            <h2 className="text-3xl font-bold text-white font-display">
-              Paiement réussi !
-            </h2>
-            <p className="text-neutral-400">Un reçu a été envoyé à {email}</p>
-            <p className="text-neutral-600 text-xs font-mono">
-              {transactionId}
-            </p>
-            <button
-              onClick={() => navigate({ to: "/" })}
-              className="mt-4 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition-all"
-            >
-              Retour à l'accueil
-            </button>
-          </motion.div>
+
+            {/* ── Don ── */}
+            <DonationForm email={email} />
+          </div>
         </main>
         <Footer />
       </div>
@@ -1033,6 +1024,8 @@ function RouteComponent() {
                       <StripePaymentForm
                         paymentId={paymentId!}
                         email={email}
+                        cardName={cardName}
+                        billingCountry={billingCountry}
                         onSuccess={() => {
                           setStatus("completed");
                           setTransactionId(paymentId);
@@ -1143,10 +1136,10 @@ function RouteComponent() {
                           transition={{ duration: 0.15 }}
                           className="space-y-4"
                         >
-                          <Field label="Nom sur la carte">
+                          <Field label="Nom complet">
                             <input
                               type="text"
-                              placeholder="JEAN DUPONT"
+                              placeholder="ELIKIA NEYA"
                               value={cardName}
                               onChange={(e) =>
                                 setCardName(e.target.value.toUpperCase())
@@ -1155,55 +1148,6 @@ function RouteComponent() {
                               className={inputCls}
                             />
                           </Field>
-                          <Field label="Numéro de carte">
-                            <div className="relative">
-                              <input
-                                type="text"
-                                placeholder="1234 5678 9012 3456"
-                                value={cardNumber}
-                                onChange={(e) =>
-                                  setCardNumber(
-                                    formatCardNumber(e.target.value),
-                                  )
-                                }
-                                disabled={isProcessing}
-                                className={`${inputCls} pr-12 font-mono tracking-wider`}
-                              />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-base opacity-40">
-                                💳
-                              </span>
-                            </div>
-                          </Field>
-                          <div className="grid grid-cols-2 gap-3">
-                            <Field label="Expiration">
-                              <input
-                                type="text"
-                                placeholder="MM/AA"
-                                value={expiry}
-                                onChange={(e) =>
-                                  setExpiry(formatExpiry(e.target.value))
-                                }
-                                disabled={isProcessing}
-                                className={`${inputCls} font-mono tracking-wider`}
-                              />
-                            </Field>
-                            <Field label="CVC">
-                              <input
-                                type="text"
-                                placeholder="123"
-                                value={cvc}
-                                onChange={(e) =>
-                                  setCvc(
-                                    e.target.value
-                                      .replace(/\D/g, "")
-                                      .slice(0, 4),
-                                  )
-                                }
-                                disabled={isProcessing}
-                                className={`${inputCls} font-mono tracking-wider`}
-                              />
-                            </Field>
-                          </div>
                           <Field
                             label="Pays de facturation"
                             icon={<Globe className="w-3.5 h-3.5" />}
@@ -1217,8 +1161,8 @@ function RouteComponent() {
                             />
                           </Field>
                           <p className="flex items-center gap-2 text-xs text-neutral-600">
-                            <span>🔒</span> Paiement sécurisé via Stripe. Vos
-                            données sont chiffrées.
+                            <span>🔒</span> Les informations de carte sont
+                            saisies directement via Stripe.
                           </p>
                         </motion.div>
                       )}

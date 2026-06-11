@@ -11,6 +11,7 @@ import { checkoutRoutes } from "./module/payment/checkout";
 import { pawapayWebhookRoutes } from "./module/webhook/pawapay";
 import { stripeWebhookRoutes } from "./module/webhook/stripe";
 import { paymentStatusRoutes } from "./module/payment/payment";
+import { donationRoutes } from "./module/payment/donation";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
@@ -30,6 +31,7 @@ const app = new Elysia()
   .use(paymentStatusRoutes)
   .use(pawapayWebhookRoutes)
   .use(stripeWebhookRoutes)
+  .use(donationRoutes)
   .listen(env.PORT);
 
 console.log(

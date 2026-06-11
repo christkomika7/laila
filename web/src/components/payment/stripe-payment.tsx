@@ -10,11 +10,15 @@ import { useState } from "react";
 export function StripePaymentForm({
   paymentId,
   email,
+  cardName,
+  billingCountry,
   onSuccess,
   onError,
 }: {
   paymentId: string;
   email: string;
+  cardName: string;
+  billingCountry: string;
   onSuccess: () => void;
   onError: (msg: string) => void;
 }) {
@@ -38,10 +42,17 @@ export function StripePaymentForm({
       setLoading(false);
       return;
     }
-
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
-      confirmParams: { receipt_email: email },
+      confirmParams: {
+        receipt_email: email,
+        payment_method_data: {
+          billing_details: {
+            name: cardName,
+            address: { country: billingCountry },
+          },
+        },
+      },
       redirect: "if_required",
     });
 

@@ -291,6 +291,29 @@ model Payment {
   @@map("payment")
 }
 
+model Donation {
+  id            String          @id @default(cuid())
+  email         String
+  name          String?
+  amountInCents Int
+  currency      String          @default("XAF")
+  provider      PaymentProvider
+  status        PaymentStatus   @default(PENDING)
+
+  providerPaymentId  String?
+  stripeClientSecret String?
+  idempotencyKey     String  @unique @default(cuid())
+
+  completedAt DateTime?
+  failedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@map("donation")
+}
+
 model WebhookEvent {
   id         String          @id @default(cuid())
   provider   PaymentProvider
