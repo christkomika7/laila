@@ -1,0 +1,351 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MessageStatus {
+  NEW
+  READ
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  AUDIO
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentProvider {
+  STRIPE
+  PAWAPAY
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  phone         String?
+  country       String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  orders        Order[]
+  role          String    @default("user")
+
+  @@unique([email])
+  @@map("user")
+}
+
+model ContactMessage {
+  id        String        @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    MessageStatus @default(NEW)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Gallery {
+  id          String    @id @default(cuid())
+  imageUrl    String
+  title       String
+  isExclusive Boolean   @default(false)
+  description String?
+  pageOrder   Int
+  mediaType   MediaType @default(IMAGE)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Album {
+  id            String   @id @default(cuid())
+  title         String
+  releaseDate   DateTime
+  description   String?
+  coverUrl      String?
+  downloadCount Int      @default(0)
+  published     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  tracks     Track[]
+  orderItems OrderItem[]
+
+  @@index([published])
+}
+
+model Track {
+  id               String  @id @default(cuid())
+  title            String
+  duration         Float
+  price            Float
+  featuringArtists String?
+  previewUrl       String?
+  fullAudioUrl     String
+  coverUrl         String?
+  downloadCount    Int     @default(0)
+  published        Boolean @default(false)
+
+  albumId String?
+  album   Album?  @relation(fields: [albumId], references: [id], onDelete: SetNull)
+
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  orderItems OrderItem[]
+
+  @@index([published])
+  @@index([albumId])
+}
+
+model Product {
+  id            String        @id @default(cuid())
+  title         String
+  subtitle      String?
+  description   String
+  ribbonText    String?
+  coverImage    String
+  artist        String?
+  onlineStoreId String?
+  purchasable   Boolean       @default(true)
+  status        ProductStatus @default(DRAFT)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  images         ProductImage[]
+  variants       ProductVariant[]
+  additionalInfo ProductInfo[]
+  tags           ProductTag[]
+}
+
+model ProductImage {
+  id        String @id @default(cuid())
+  productId String
+  url       String
+  position  Int    @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductVariant {
+  id                String  @id @default(cuid())
+  productId         String
+  title             String
+  priceInCents      Int
+  salePriceInCents  Int?
+  currency          String  @default("XAF")
+  inventoryQuantity Int     @default(0)
+  manageInventory   Boolean @default(true)
+  imageUrl          String?
+  sku               String?
+
+  product    Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems OrderItem[]
+}
+
+model ProductInfo {
+  id          String @id @default(cuid())
+  productId   String
+  title       String
+  description String
+  order       Int    @default(0)
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductTag {
+  id        String @id @default(cuid())
+  productId String
+  value     String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  country   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders Order[]
+
+  @@map("customer")
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  customerId     String
+  status         OrderStatus @default(PENDING)
+  totalInCents   Int
+  currency       String      @default("XAF")
+  billingCountry String?
+  notes          String?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  customer Customer?   @relation(fields: [customerId], references: [id])
+  user     User?       @relation(fields: [userId], references: [id])
+  items    OrderItem[]
+  payment  Payment?
+  userId   String?
+
+  @@index([status])
+  @@index([customerId])
+  @@map("order")
+}
+
+model OrderItem {
+  id               String  @id @default(cuid())
+  orderId          String
+  quantity         Int
+  unitPriceInCents Int
+  title            String
+  coverUrl         String?
+
+  variantId String?
+  trackId   String?
+  albumId   String?
+
+  order   Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  variant ProductVariant? @relation(fields: [variantId], references: [id])
+  track   Track?          @relation(fields: [trackId], references: [id])
+  album   Album?          @relation(fields: [albumId], references: [id])
+
+  @@index([orderId])
+  @@map("order_item")
+}
+
+model Payment {
+  id       String          @id @default(cuid())
+  orderId  String          @unique
+  provider PaymentProvider
+  status   PaymentStatus   @default(PENDING)
+
+  providerPaymentId String?
+  providerChargeId  String?
+
+  msisdn        String?
+  correspondent String?
+  country       String?
+
+  stripeClientSecret String?
+  billingCountry     String?
+  cardLast4          String?
+  cardBrand          String?
+
+  idempotencyKey String @unique @default(cuid())
+
+  capturedAmountInCents Int?
+  capturedCurrency      String?
+
+  initiatedAt DateTime?
+  completedAt DateTime?
+  failedAt    DateTime?
+
+  failureReason String?
+
+  lastWebhookPayload Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([provider, status])
+  @@index([providerPaymentId])
+  @@map("payment")
+}
+
+model WebhookEvent {
+  id         String          @id @default(cuid())
+  provider   PaymentProvider
+  externalId String
+  processed  Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+
+  @@unique([provider, externalId])
+  @@map("webhook_event")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}

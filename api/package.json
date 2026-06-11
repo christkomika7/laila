@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysia/static": "^1.4.11",
+    "@elysiajs/cors": "^1.4.2",
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "@t3-oss/env-core": "^0.13.11",
+    "better-auth": "^1.6.14",
+    "dotenv": "^17.4.2",
+    "elysia": "latest",
+    "nodemailer": "^8.0.10",
+    "pg": "^8.21.0",
+    "stripe": "^22.2.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "@types/nodemailer": "^8.0.0",
+    "@types/pg": "^8.20.0",
+    "bun-types": "latest",
+    "prisma": "^7.8.0"
+  },
+  "module": "src/index.js"
+}
