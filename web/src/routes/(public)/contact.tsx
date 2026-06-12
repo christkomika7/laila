@@ -123,7 +123,7 @@ function RouteComponent() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="lg:col-span-4 space-y-8"
             >
-              <div className="bg-card p-8 rounded-2xl border border-border shadow-lg h-full">
+              <div className="bg-card p-8 rounded-lg border border-border shadow-lg h-full">
                 <h2 className="text-2xl font-semibold font-display mb-6 border-b border-border pb-4 text-foreground">
                   Contacts Directs
                 </h2>
@@ -205,7 +205,7 @@ function RouteComponent() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="lg:col-span-8"
             >
-              <div className="bg-card p-8 rounded-2xl border border-border shadow-lg">
+              <div className="bg-card p-8 rounded-lg border border-border shadow-lg">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">

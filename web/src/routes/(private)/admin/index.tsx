@@ -2,16 +2,9 @@ import AdminAlbum from "#/components/admin/album";
 import AdminClient from "#/components/admin/client";
 import { AdminMessagesTab } from "#/components/admin/contact-message";
 import { AdminGalleryTab } from "#/components/admin/gallery";
+import AdminInvoiceTab from "#/components/admin/invoice";
 import { AdminProductTab } from "#/components/admin/product";
 import Header from "#/components/header";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "#/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { BarChart, FileText, Mail, Package, Users } from "lucide-react";
@@ -102,7 +95,7 @@ function RouteComponent() {
           </h1>
 
           <Tabs defaultValue="customers" className="space-y-8">
-            <TabsList className="grid grid-cols-2 md:grid-cols-7 mb-8 bg-muted/50 p-1 rounded-xl h-auto!">
+            <TabsList className="grid grid-cols-2 md:grid-cols-7 mb-8 bg-muted/50 p-1 rounded-md h-auto!">
               <TabsTrigger
                 value="customers"
                 className="py-3 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm rounded-lg"
@@ -181,43 +174,7 @@ function RouteComponent() {
 
             {/* ── Factures ── */}
             <TabsContent value="invoices">
-              <div className="bg-card rounded-xl p-6 shadow-sm border border-border overflow-x-auto">
-                <h2 className="text-2xl font-semibold mb-6">
-                  Toutes les Factures
-                </h2>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Numéro de Facture</TableHead>
-                      <TableHead>Nom du Client</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Montant</TableHead>
-                      <TableHead>Statut</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {invoices.map((invoice) => (
-                      <TableRow key={invoice.id}>
-                        <TableCell className="font-medium text-foreground">
-                          {invoice.invoiceNumber}
-                        </TableCell>
-                        <TableCell>
-                          {invoice.expand?.userId?.email || "N/A"}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(invoice.created).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell className="font-mono text-primary">
-                          ${invoice.total.toFixed(2)}
-                        </TableCell>
-                        <TableCell className="capitalize">
-                          {invoice.status}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+              <AdminInvoiceTab />
             </TabsContent>
 
             {/* ── Messages ── */}
@@ -228,7 +185,7 @@ function RouteComponent() {
             {/* ── Analytique ── */}
             <TabsContent value="analytics">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
                     Revenu Total
                   </h3>
@@ -239,7 +196,7 @@ function RouteComponent() {
                       .toFixed(2)}
                   </p>
                 </div>
-                <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
                     Total des Commandes
                   </h3>
@@ -247,7 +204,7 @@ function RouteComponent() {
                     {invoices.length}
                   </p>
                 </div>
-                <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
                     Clients
                   </h3>

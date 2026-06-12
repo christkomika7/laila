@@ -49,7 +49,7 @@ export const StripeCardFields = ({
           value={cardName}
           onChange={(e) => onCardName(e.target.value.toUpperCase())}
           disabled={disabled}
-          className="w-full h-12 px-4 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
+          className="w-full h-12 px-4 rounded-md border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
         />
       </div>
       <div className="space-y-1.5">
@@ -63,7 +63,7 @@ export const StripeCardFields = ({
             value={cardNumber}
             onChange={(e) => onCardNumber(formatCardNumber(e.target.value))}
             disabled={disabled}
-            className="w-full h-12 pl-4 pr-12 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
+            className="w-full h-12 pl-4 pr-12 rounded-md border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex gap-1 opacity-40">
             <span className="text-base">💳</span>
@@ -81,7 +81,7 @@ export const StripeCardFields = ({
             value={expiry}
             onChange={(e) => onExpiry(formatExpiry(e.target.value))}
             disabled={disabled}
-            className="w-full h-12 px-4 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
+            className="w-full h-12 px-4 rounded-md border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
           />
         </div>
         <div className="space-y-1.5">
@@ -96,7 +96,7 @@ export const StripeCardFields = ({
               onCvc(e.target.value.replace(/\D/g, "").slice(0, 4))
             }
             disabled={disabled}
-            className="w-full h-12 px-4 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
+            className="w-full h-12 px-4 rounded-md border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm font-mono tracking-wider focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950 disabled:opacity-50 transition-colors hover:border-neutral-600"
           />
         </div>
       </div>

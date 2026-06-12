@@ -47,7 +47,7 @@ function RouteComponent() {
         <Header />
         <div className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="aspect-square bg-[#111] rounded-2xl border border-red-950/30" />
+            <div className="aspect-square bg-[#111] rounded-lg border border-red-950/30" />
             <div className="space-y-6 pt-8">
               <div className="h-12 bg-[#111] rounded w-3/4" />
               <div className="h-6  bg-[#111] rounded w-1/4" />
@@ -110,7 +110,7 @@ function RouteComponent() {
             className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"
           >
             {/* Cover */}
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-red-900/30 relative group bg-[#0d0d0d]">
+            <div className="aspect-square rounded-lg overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-red-900/30 relative group bg-[#0d0d0d]">
               {release.videoUrl ? (
                 <video
                   src={release.videoUrl}

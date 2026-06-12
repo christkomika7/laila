@@ -49,7 +49,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="group rounded-2xl border border-zinc-800/60 bg-[#0e0e0e] overflow-hidden hover:border-zinc-600/60 hover:bg-[#141414] transition-all duration-300"
+      className="group rounded-lg border border-zinc-800/60 bg-[#0e0e0e] overflow-hidden hover:border-zinc-600/60 hover:bg-[#141414] transition-all duration-300"
     >
       <Link
         to="/product/$productId"

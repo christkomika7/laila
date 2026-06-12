@@ -62,7 +62,7 @@ function RouteComponent() {
                     href={video.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block relative rounded-2xl overflow-hidden bg-[#111] border border-red-950/30 transition-all duration-500 hover:border-red-500/50 hover:shadow-[0_10px_40px_rgba(220,38,38,0.15)] hover:-translate-y-1"
+                    className="group block relative rounded-lg overflow-hidden bg-[#111] border border-red-950/30 transition-all duration-500 hover:border-red-500/50 hover:shadow-[0_10px_40px_rgba(220,38,38,0.15)] hover:-translate-y-1"
                   >
                     <div className="relative aspect-video overflow-hidden bg-[#0a0a0a]">
                       <img

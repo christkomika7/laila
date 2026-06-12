@@ -129,7 +129,7 @@ function RouteComponent() {
                 </p>
               </div>
 
-              <div className="bg-amber-950/30 border border-amber-900/50 rounded-xl p-4">
+              <div className="bg-amber-950/30 border border-amber-900/50 rounded-md p-4">
                 <p className="text-amber-400 text-sm font-medium animate-pulse">
                   En attente de la réponse de l'opérateur...
                 </p>

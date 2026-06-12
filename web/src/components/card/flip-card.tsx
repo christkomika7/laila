@@ -9,9 +9,9 @@ interface FlipCardProps {
 const FlipCard = ({ src, mediaType, title }: FlipCardProps) => {
   return (
     <div className="group perspective-1000 w-full aspect-3/4 cursor-pointer">
-      <div className="relative w-full h-full transition-transform duration-700 transform-style-3d group-hover:rotate-y-180 shadow-2xl shadow-red-900/20 rounded-2xl">
+      <div className="relative w-full h-full transition-transform duration-700 transform-style-3d group-hover:rotate-y-180 shadow-2xl shadow-red-900/20 rounded-lg">
         {/* Front Side */}
-        <div className="absolute inset-0 w-full h-full backface-hidden rounded-2xl overflow-hidden bg-card border border-white/10">
+        <div className="absolute inset-0 w-full h-full backface-hidden rounded-lg overflow-hidden bg-card border border-white/10">
           {mediaType === "VIDEO" && src ? (
             <video
               src={src}
@@ -36,7 +36,7 @@ const FlipCard = ({ src, mediaType, title }: FlipCardProps) => {
         </div>
 
         {/* Back Side */}
-        <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-2xl overflow-hidden bg-card border border-secondary/30">
+        <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 rounded-lg overflow-hidden bg-card border border-secondary/30">
           <div className="w-full h-full flex items-center justify-center bg-muted" />
           <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
             <div className="w-full text-center">

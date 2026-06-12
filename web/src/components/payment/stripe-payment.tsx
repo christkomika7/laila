@@ -13,12 +13,14 @@ export function StripePaymentForm({
   cardName,
   billingCountry,
   onSuccess,
+  isLoggedIn,
   onError,
 }: {
   paymentId: string;
   email: string;
   cardName: string;
   billingCountry: string;
+  isLoggedIn?: boolean;
   onSuccess: () => void;
   onError: (msg: string) => void;
 }) {
@@ -49,6 +51,7 @@ export function StripePaymentForm({
         payment_method_data: {
           billing_details: {
             name: cardName,
+            email: email,
             address: { country: billingCountry },
           },
         },
@@ -91,13 +94,35 @@ export function StripePaymentForm({
         onReady={() => setStripeReady(true)}
         options={{
           layout: "tabs",
+          defaultValues: {
+            billingDetails: {
+              name: cardName || undefined,
+              email: email || undefined,
+              address: {
+                country: billingCountry || undefined,
+              },
+            },
+          },
+          fields: isLoggedIn
+            ? {
+                billingDetails: {
+                  name: "never",
+                  email: "never",
+                },
+              }
+            : {
+                billingDetails: {
+                  name: "auto",
+                  email: "auto",
+                },
+              },
         }}
       />
       <button
         type="button"
         onClick={handleConfirm}
         disabled={loading || !stripe || !stripeReady}
-        className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-base transition-all disabled:opacity-40 flex items-center justify-center gap-2.5"
+        className="w-full py-3.5 rounded-md bg-amber-500 hover:bg-amber-400 text-neutral-950 font-bold text-base transition-all disabled:opacity-40 flex items-center justify-center gap-2.5"
       >
         {loading ? (
           <>

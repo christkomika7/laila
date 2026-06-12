@@ -14,7 +14,7 @@ const PremiumCard = React.forwardRef(
       <div
         ref={props.ref}
         className={cn(
-          "bg-card border border-border rounded-2xl overflow-hidden",
+          "bg-card border border-border rounded-lg overflow-hidden",
           hover &&
             "transition-premium hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1 hover:border-primary/30",
           className,

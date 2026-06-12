@@ -9,7 +9,7 @@
 
 // export default function AdminCustomersTab() {
 //   return (
-//     <div className="bg-card rounded-xl p-6 shadow-sm border border-border overflow-x-auto">
+//     <div className="bg-card rounded-md p-6 shadow-sm border border-border overflow-x-auto">
 //       <h2 className="text-2xl font-semibold mb-6">Clients</h2>
 //       <Table>
 //         <TableHeader>

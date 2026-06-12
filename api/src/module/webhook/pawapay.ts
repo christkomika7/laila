@@ -31,14 +31,38 @@ export const pawapayWebhookRoutes = new Elysia({ prefix: "/webhooks" }).post(
         },
       });
 
+      // Si pas un payment, vérifier si c'est un don
       if (!payment) {
+        const donation = await prisma.donation.findFirst({
+          where: {
+            OR: [
+              { providerPaymentId: depositId },
+              { idempotencyKey: depositId },
+            ],
+            provider: "PAWAPAY",
+          },
+        });
+
+        if (donation) {
+          if (status === "COMPLETED") {
+            await prisma.donation.update({
+              where: { id: donation.id },
+              data: { status: "COMPLETED", completedAt: new Date() },
+            });
+          } else if (status === "FAILED") {
+            await prisma.donation.update({
+              where: { id: donation.id },
+              data: { status: "FAILED", failedAt: new Date() },
+            });
+          }
+          return { received: true };
+        }
+
         console.warn(
-          `[pawapay-webhook] Payment introuvable pour depositId: ${depositId}`,
+          `[pawapay-webhook] Payment/Donation introuvable pour depositId: ${depositId}`,
         );
-        // 200 pour éviter les retries PawaPay sur un ID inconnu
         return { received: true };
       }
-
       switch (status as PawapayDepositStatus) {
         case "COMPLETED":
           await handleDepositCompleted(payment.id, payment.orderId, body);

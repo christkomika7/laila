@@ -309,7 +309,7 @@ export default function AdminAlbum() {
 
   return (
     <>
-      <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+      <div className="bg-card rounded-md p-6 shadow-sm border border-border">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Albums</h2>
           <Button onClick={openCreateAlbum} className="gap-2">
@@ -326,7 +326,7 @@ export default function AdminAlbum() {
             {albums.map((album) => (
               <div
                 key={album.id}
-                className="border border-border rounded-xl overflow-hidden"
+                className="border border-border rounded-md overflow-hidden"
               >
                 <div className="flex items-center gap-4 p-4 bg-muted/20">
                   <div className="w-14 h-14 rounded-lg overflow-hidden border border-border shrink-0 bg-muted flex items-center justify-center">
@@ -435,7 +435,7 @@ export default function AdminAlbum() {
         )}
       </div>
 
-      <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+      <div className="bg-card rounded-md p-6 shadow-sm border border-border">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">
             Singles{" "}
@@ -453,7 +453,7 @@ export default function AdminAlbum() {
             Aucun single pour l'instant.
           </p>
         ) : (
-          <div className="divide-y divide-border border border-border rounded-xl overflow-hidden">
+          <div className="divide-y divide-border border border-border rounded-md overflow-hidden">
             {singles.map((track) => (
               <TrackRow
                 key={track.id}

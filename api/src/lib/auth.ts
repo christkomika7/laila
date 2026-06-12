@@ -24,7 +24,7 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     revokeSessionsOnPasswordReset: true,
     onExistingUserSignUp: async ({ user }) => {
-      void sendMail({
+      await sendMail({
         to: user.email,
         title: "Nouvelle inscription",
         body: `Quelqu'un a essayé de créer un compte en utilisant votre adresse e-mail. Si c'est vous, essayez de vous connecter au lieu de cela. Sinon, vous pouvez simplement ignorer cet e-mail.`,
@@ -34,7 +34,7 @@ export const auth = betterAuth({
   emailVerification: {
     sendVerificationEmail: async ({ user, token }) => {
       const verificationUrl = `${env.CLIENT_URL}/email-verified?token=${token}`;
-      void sendMail({
+      await sendMail({
         to: user.email,
         title: "Vérifier votre adresse e-mail",
         body: `Cliquez sur le lien pour vérifier votre adresse e-mail: ${verificationUrl}`,

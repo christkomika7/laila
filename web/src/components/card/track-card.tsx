@@ -42,7 +42,7 @@ const TrackCard = ({
   const displayArtist = [artistName, featText].filter(Boolean).join(" ");
 
   return (
-    <div className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 rounded-xl bg-[#0e0e0e] border border-neutral-800/60 hover:border-neutral-600/60 hover:bg-[#141414] transition-all duration-300">
+    <div className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 rounded-md bg-[#0e0e0e] border border-neutral-800/60 hover:border-neutral-600/60 hover:bg-[#141414] transition-all duration-300">
       <div className="flex items-center gap-3 sm:gap-5 flex-1 min-w-0">
         <span className="text-neutral-600 font-display font-bold text-xl w-6 text-center group-hover:text-neutral-400 transition-colors hidden sm:block">
           {index}

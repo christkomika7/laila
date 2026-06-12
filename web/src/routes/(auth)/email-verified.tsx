@@ -164,7 +164,7 @@ function RouteComponent() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55 }}
-            className="bg-[#161616] rounded-2xl p-6 border border-green-900/20 mb-8"
+            className="bg-[#161616] rounded-lg p-6 border border-green-900/20 mb-8"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">

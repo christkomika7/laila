@@ -19,7 +19,7 @@ export function ProductCard({
   );
 
   return (
-    <div className="group relative flex flex-col rounded-xl border border-border bg-card overflow-hidden transition-shadow hover:shadow-md">
+    <div className="group relative flex flex-col rounded-md border border-border bg-card overflow-hidden transition-shadow hover:shadow-md">
       <div className="relative aspect-square bg-muted overflow-hidden">
         {product.coverImage ? (
           <img

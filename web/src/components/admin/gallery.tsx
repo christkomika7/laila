@@ -175,7 +175,7 @@ export function AdminGalleryTab() {
 
   return (
     <>
-      <div className="bg-card rounded-xl p-6 shadow-sm border border-border">
+      <div className="bg-card rounded-md p-6 shadow-sm border border-border">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-semibold">Galerie</h2>
@@ -194,7 +194,7 @@ export function AdminGalleryTab() {
             <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
           </div>
         ) : items.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 border border-dashed border-border rounded-xl gap-3">
+          <div className="flex flex-col items-center justify-center py-16 border border-dashed border-border rounded-md gap-3">
             <ImagePlus className="w-10 h-10 text-muted-foreground/40" />
             <p className="text-muted-foreground text-sm">
               Aucun média pour l'instant.

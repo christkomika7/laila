@@ -27,7 +27,6 @@ import { Route as authEmailVerifiedRouteImport } from './routes/(auth)/email-ver
 import { Route as privateUserIndexRouteImport } from './routes/(private)/user/index'
 import { Route as privateAdminIndexRouteImport } from './routes/(private)/admin/index'
 import { Route as publicProductProductIdRouteImport } from './routes/(public)/product.$productId'
-import { Route as publicPaymentStatusDepositIdRouteImport } from './routes/(public)/payment-status.$depositId'
 import { Route as publicAlbumAlbumIdRouteImport } from './routes/(public)/album.$albumId'
 
 const publicIndexRoute = publicIndexRouteImport.update({
@@ -120,12 +119,6 @@ const publicProductProductIdRoute = publicProductProductIdRouteImport.update({
   path: '/product/$productId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const publicPaymentStatusDepositIdRoute =
-  publicPaymentStatusDepositIdRouteImport.update({
-    id: '/(public)/payment-status/$depositId',
-    path: '/payment-status/$depositId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const publicAlbumAlbumIdRoute = publicAlbumAlbumIdRouteImport.update({
   id: '/(public)/album/$albumId',
   path: '/album/$albumId',
@@ -149,7 +142,6 @@ export interface FileRoutesByFullPath {
   '/videography': typeof publicVideographyRoute
   '/': typeof publicIndexRoute
   '/album/$albumId': typeof publicAlbumAlbumIdRoute
-  '/payment-status/$depositId': typeof publicPaymentStatusDepositIdRoute
   '/product/$productId': typeof publicProductProductIdRoute
   '/admin/': typeof privateAdminIndexRoute
   '/user/': typeof privateUserIndexRoute
@@ -171,7 +163,6 @@ export interface FileRoutesByTo {
   '/videography': typeof publicVideographyRoute
   '/': typeof publicIndexRoute
   '/album/$albumId': typeof publicAlbumAlbumIdRoute
-  '/payment-status/$depositId': typeof publicPaymentStatusDepositIdRoute
   '/product/$productId': typeof publicProductProductIdRoute
   '/admin': typeof privateAdminIndexRoute
   '/user': typeof privateUserIndexRoute
@@ -194,7 +185,6 @@ export interface FileRoutesById {
   '/(public)/videography': typeof publicVideographyRoute
   '/(public)/': typeof publicIndexRoute
   '/(public)/album/$albumId': typeof publicAlbumAlbumIdRoute
-  '/(public)/payment-status/$depositId': typeof publicPaymentStatusDepositIdRoute
   '/(public)/product/$productId': typeof publicProductProductIdRoute
   '/(private)/admin/': typeof privateAdminIndexRoute
   '/(private)/user/': typeof privateUserIndexRoute
@@ -218,7 +208,6 @@ export interface FileRouteTypes {
     | '/videography'
     | '/'
     | '/album/$albumId'
-    | '/payment-status/$depositId'
     | '/product/$productId'
     | '/admin/'
     | '/user/'
@@ -240,7 +229,6 @@ export interface FileRouteTypes {
     | '/videography'
     | '/'
     | '/album/$albumId'
-    | '/payment-status/$depositId'
     | '/product/$productId'
     | '/admin'
     | '/user'
@@ -262,7 +250,6 @@ export interface FileRouteTypes {
     | '/(public)/videography'
     | '/(public)/'
     | '/(public)/album/$albumId'
-    | '/(public)/payment-status/$depositId'
     | '/(public)/product/$productId'
     | '/(private)/admin/'
     | '/(private)/user/'
@@ -285,7 +272,6 @@ export interface RootRouteChildren {
   publicVideographyRoute: typeof publicVideographyRoute
   publicIndexRoute: typeof publicIndexRoute
   publicAlbumAlbumIdRoute: typeof publicAlbumAlbumIdRoute
-  publicPaymentStatusDepositIdRoute: typeof publicPaymentStatusDepositIdRoute
   publicProductProductIdRoute: typeof publicProductProductIdRoute
   privateAdminIndexRoute: typeof privateAdminIndexRoute
   privateUserIndexRoute: typeof privateUserIndexRoute
@@ -419,13 +405,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicProductProductIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(public)/payment-status/$depositId': {
-      id: '/(public)/payment-status/$depositId'
-      path: '/payment-status/$depositId'
-      fullPath: '/payment-status/$depositId'
-      preLoaderRoute: typeof publicPaymentStatusDepositIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(public)/album/$albumId': {
       id: '/(public)/album/$albumId'
       path: '/album/$albumId'
@@ -453,7 +432,6 @@ const rootRouteChildren: RootRouteChildren = {
   publicVideographyRoute: publicVideographyRoute,
   publicIndexRoute: publicIndexRoute,
   publicAlbumAlbumIdRoute: publicAlbumAlbumIdRoute,
-  publicPaymentStatusDepositIdRoute: publicPaymentStatusDepositIdRoute,
   publicProductProductIdRoute: publicProductProductIdRoute,
   privateAdminIndexRoute: privateAdminIndexRoute,
   privateUserIndexRoute: privateUserIndexRoute,

@@ -105,7 +105,7 @@ export function AdminMessagesTab() {
 
   return (
     <>
-      <div className="bg-card rounded-xl p-6 shadow-sm border border-border overflow-x-auto">
+      <div className="bg-card rounded-md p-6 shadow-sm border border-border overflow-x-auto">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Messages</h2>
           <span className="text-sm text-muted-foreground">

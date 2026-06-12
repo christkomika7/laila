@@ -51,8 +51,7 @@ export async function checkStock(items: CartItem[]) {
     if (!variant) throw new Error(`Variant introuvable : ${item.variantId}`);
     if (variant.manageInventory && variant.inventoryQuantity < item.quantity) {
       throw new Error(
-        `Stock insuffisant pour la variante ${item.variantId} ` +
-          `(disponible: ${variant.inventoryQuantity}, demandé: ${item.quantity})`,
+        `Stock insuffisant pour "${item.title}" (disponible: ${variant.inventoryQuantity}, demandé: ${item.quantity})`,
       );
     }
   }

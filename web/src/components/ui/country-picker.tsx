@@ -41,7 +41,7 @@ export const CountryPicker = ({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((o) => !o)}
-        className="w-full h-12 px-4 flex items-center justify-between gap-2 rounded-xl border border-neutral-700 bg-neutral-900 text-white text-sm hover:border-neutral-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950"
+        className="w-full h-12 px-4 flex items-center justify-between gap-2 rounded-md border border-neutral-700 bg-neutral-900 text-white text-sm hover:border-neutral-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-950"
       >
         <span className="flex items-center gap-3">
           <span className="text-lg leading-none">{selected?.flag}</span>
@@ -62,7 +62,7 @@ export const CountryPicker = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.98 }}
             transition={{ duration: 0.12 }}
-            className="absolute z-50 top-[calc(100%+6px)] left-0 right-0 bg-neutral-900 border border-neutral-700 rounded-xl shadow-2xl overflow-hidden"
+            className="absolute z-50 top-[calc(100%+6px)] left-0 right-0 bg-neutral-900 border border-neutral-700 rounded-md shadow-2xl overflow-hidden"
           >
             <div className="p-2 border-b border-neutral-800">
               <div className="relative">

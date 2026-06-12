@@ -1,6 +1,5 @@
 import TrackCard from "#/components/card/track-card";
 import Footer from "#/components/footer";
-import PaymentForm from "#/components/form/payment-form";
 import Header from "#/components/header";
 import {
   Accordion,
@@ -8,13 +7,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "#/components/ui/accordion";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "#/components/ui/dialog";
 import ImageWithFallback from "#/components/ui/image-with-fallback";
 import PremiumButton from "#/components/ui/premiem.button";
 import { useMusicStore } from "#/store/use-music-store";
@@ -78,14 +70,6 @@ function RouteComponent() {
   const [currentPlayingTrackId, setCurrentPlayingTrackId] = useState<
     string | null
   >(null);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [purchaseItem, setPurchaseItem] = useState<{
-    type: "album" | "track";
-    title: string;
-    price: number;
-    albumId?: string;
-    trackId?: string;
-  } | null>(null);
 
   useEffect(() => {
     if (albums.length === 0) fetchPublicAlbums();
@@ -125,29 +109,15 @@ function RouteComponent() {
   };
 
   const handleBuyAlbum = () => {
-    if (!album) return;
-    setPurchaseItem({
-      type: "album",
-      title: album.title,
-      price: totalPrice,
-      albumId: album.id,
-    });
-    setIsPaymentModalOpen(true);
+    if (!album || albumInCart) return;
+    addAlbum(album);
+    navigate({ to: "/checkout" });
   };
 
   const handleBuyTrack = (track: Track) => {
-    setPurchaseItem({
-      type: "track",
-      title: track.title,
-      price: track.price,
-      trackId: track.id,
-    });
-    setIsPaymentModalOpen(true);
-  };
-
-  const handlePaymentSuccess = (depositId: string) => {
-    setIsPaymentModalOpen(false);
-    navigate({ to: `/payment-status/${depositId}` });
+    if (items.some((i) => i.id === `track:${track.id}`)) return;
+    addTrack(track);
+    navigate({ to: "/checkout" });
   };
 
   if (loading) {
@@ -156,7 +126,7 @@ function RouteComponent() {
         <Header />
         <div className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse grid grid-cols-1 lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-1 aspect-square bg-[#1a1a1a] rounded-2xl" />
+            <div className="lg:col-span-1 aspect-square bg-[#1a1a1a] rounded-lg" />
             <div className="lg:col-span-2 space-y-6">
               <div className="h-12 bg-[#1a1a1a] rounded w-3/4" />
               <div className="h-6 bg-[#1a1a1a] rounded w-1/2" />
@@ -224,7 +194,7 @@ function RouteComponent() {
               className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16"
             >
               <div className="lg:col-span-5 space-y-8">
-                <div className="aspect-square rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10 relative group">
+                <div className="aspect-square rounded-lg overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] ring-1 ring-white/10 relative group">
                   <ImageWithFallback
                     src={album.coverUrl ?? ""}
                     alt={displayTitle}
@@ -284,7 +254,7 @@ function RouteComponent() {
 
                     {albumInCart ? (
                       <div className="flex items-center gap-3">
-                        <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-xl border border-green-600/30 bg-green-600/10 text-green-400">
+                        <div className="flex-1 flex items-center gap-2 px-4 py-3 rounded-md border border-green-600/30 bg-green-600/10 text-green-400">
                           <Check className="h-4 w-4 shrink-0" />
                           <span className="font-medium text-sm">
                             Album dans le panier
@@ -292,7 +262,7 @@ function RouteComponent() {
                         </div>
                         <button
                           onClick={handleRemoveAlbumFromCart}
-                          className="flex items-center gap-1.5 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:text-red-300 border border-red-800/40 hover:border-red-600/50 bg-red-950/30 hover:bg-red-900/30 transition-all"
+                          className="flex items-center gap-1.5 px-4 py-3 rounded-md text-sm font-medium text-red-400 hover:text-red-300 border border-red-800/40 hover:border-red-600/50 bg-red-950/30 hover:bg-red-900/30 transition-all"
                         >
                           <X className="h-4 w-4" />
                           Retirer
@@ -319,7 +289,7 @@ function RouteComponent() {
                 </h2>
 
                 {album.tracks.length === 0 ? (
-                  <div className="text-center py-16 bg-white/5 rounded-2xl border border-white/10">
+                  <div className="text-center py-16 bg-white/5 rounded-lg border border-white/10">
                     <Music className="h-12 w-12 mx-auto mb-4 text-white/20" />
                     <p className="text-white/40">
                       Aucun titre disponible pour le moment
@@ -356,7 +326,7 @@ function RouteComponent() {
                     <Accordion
                       type="single"
                       collapsible
-                      className="w-full bg-white/5 rounded-2xl border border-white/10 overflow-hidden"
+                      className="w-full bg-white/5 rounded-lg border border-white/10 overflow-hidden"
                     >
                       <AccordionItem value="credits" className="border-none">
                         <AccordionTrigger className="px-6 py-4 text-xl font-bold font-display hover:no-underline text-white hover:bg-white/5 transition-colors">
@@ -390,30 +360,6 @@ function RouteComponent() {
 
         <Footer />
       </div>
-
-      <Dialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
-        <DialogContent className="bg-[#111] border-white/10 text-white max-w-md w-[95vw] rounded-xl">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-display font-bold text-white">
-              Acheter {purchaseItem?.type === "track" ? "le Titre" : "l'Album"}
-            </DialogTitle>
-            <DialogDescription className="text-white/50 mt-2">
-              <span className="block text-white/80 font-medium mb-1">
-                {purchaseItem?.title}
-              </span>
-              Payez en toute sécurité via Mobile Money.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="py-4">
-            <PaymentForm
-              amount={purchaseItem?.price ?? 0}
-              albumId={purchaseItem?.albumId}
-              trackId={purchaseItem?.trackId}
-              onSuccess={handlePaymentSuccess}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 }

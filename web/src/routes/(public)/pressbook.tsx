@@ -200,7 +200,7 @@ function RouteComponent() {
                   caption=""
                 />
                 <div>
-                  <div className="w-10 h-10 mb-4 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                  <div className="w-10 h-10 mb-4 rounded-md bg-primary/10 flex items-center justify-center text-primary">
                     <Music className="w-5 h-5" />
                   </div>
                   <h3 className="text-2xl font-display font-semibold mb-3">
@@ -222,7 +222,7 @@ function RouteComponent() {
                   caption=""
                 />
                 <div>
-                  <div className="w-10 h-10 mb-4 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+                  <div className="w-10 h-10 mb-4 rounded-md bg-secondary/10 flex items-center justify-center text-secondary">
                     <Globe className="w-5 h-5" />
                   </div>
                   <h3 className="text-2xl font-display font-semibold mb-3">
@@ -301,7 +301,7 @@ function RouteComponent() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors flex flex-col justify-center"
+                    className="p-6 rounded-lg bg-card border border-border hover:border-primary/30 transition-colors flex flex-col justify-center"
                   >
                     <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
                     <p className="text-muted-foreground text-sm leading-relaxed">
@@ -373,7 +373,7 @@ function RouteComponent() {
                   ].map((track, i) => (
                     <div
                       key={i}
-                      className={`flex flex-col p-4 rounded-xl border transition-all hover:scale-[1.02] ${track.focus ? "bg-primary/5 border-primary/20 hover:border-primary/40" : "bg-muted/30 border-transparent hover:bg-muted/50"}`}
+                      className={`flex flex-col p-4 rounded-md border transition-all hover:scale-[1.02] ${track.focus ? "bg-primary/5 border-primary/20 hover:border-primary/40" : "bg-muted/30 border-transparent hover:bg-muted/50"}`}
                     >
                       <span className="font-medium flex items-center gap-2 mb-1">
                         <PlayCircle
@@ -533,7 +533,7 @@ function RouteComponent() {
               caption="Déploiement numérique et vision internationale"
             />
             <div className="pb-grid-3">
-              <div className="bg-card p-8 rounded-2xl border border-border shadow-md hover:shadow-xl transition-all">
+              <div className="bg-card p-8 rounded-lg border border-border shadow-md hover:shadow-xl transition-all">
                 <TrendingUp className="w-8 h-8 text-primary mb-6" />
                 <h3 className="text-xl font-semibold mb-4">Positionnement</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -542,7 +542,7 @@ function RouteComponent() {
                   authenticité locale forte.
                 </p>
               </div>
-              <div className="bg-card p-8 rounded-2xl border border-border shadow-md hover:shadow-xl transition-all">
+              <div className="bg-card p-8 rounded-lg border border-border shadow-md hover:shadow-xl transition-all">
                 <Globe className="w-8 h-8 text-secondary mb-6" />
                 <h3 className="text-xl font-semibold mb-4">Croissance</h3>
                 <p className="text-muted-foreground leading-relaxed">
@@ -551,7 +551,7 @@ function RouteComponent() {
                   et développement scénique.
                 </p>
               </div>
-              <div className="bg-card p-8 rounded-2xl border border-border shadow-md hover:shadow-xl transition-all">
+              <div className="bg-card p-8 rounded-lg border border-border shadow-md hover:shadow-xl transition-all">
                 <Users className="w-8 h-8 text-primary mb-6" />
                 <h3 className="text-xl font-semibold mb-4">Opportunités</h3>
                 <ul className="space-y-3 text-muted-foreground">
@@ -581,12 +581,12 @@ function RouteComponent() {
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <Skeleton
                     key={i}
-                    className="w-full aspect-square rounded-2xl bg-muted/20"
+                    className="w-full aspect-square rounded-lg bg-muted/20"
                   />
                 ))}
               </div>
             ) : galleryError ? (
-              <div className="p-8 text-center bg-muted/10 border border-border rounded-2xl text-muted-foreground flex flex-col items-center">
+              <div className="p-8 text-center bg-muted/10 border border-border rounded-lg text-muted-foreground flex flex-col items-center">
                 <ImageIcon className="w-12 h-12 mb-4 text-muted-foreground/50" />
                 <p className="mb-6">{galleryError}</p>
                 <PremiumButton
@@ -611,7 +611,7 @@ function RouteComponent() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground italic text-center p-8 bg-muted/10 rounded-2xl border border-border">
+              <p className="text-muted-foreground italic text-center p-8 bg-muted/10 rounded-lg border border-border">
                 Aucune image additionnelle disponible pour le moment.
               </p>
             )}
@@ -640,7 +640,7 @@ function RouteComponent() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-between p-6 rounded-xl bg-card border border-border hover:border-primary transition-all hover:shadow-lg group"
+                  className="flex items-center justify-between p-6 rounded-md bg-card border border-border hover:border-primary transition-all hover:shadow-lg group"
                 >
                   <span className="text-lg font-medium">{link.label}</span>
                   <LinkIcon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -705,7 +705,7 @@ function RouteComponent() {
                 <h3 className="text-2xl font-display font-semibold mb-8">
                   Bio Courte (Pour Médias)
                 </h3>
-                <div className="p-8 rounded-2xl bg-card border border-border shadow-inner">
+                <div className="p-8 rounded-lg bg-card border border-border shadow-inner">
                   <p className="text-muted-foreground leading-relaxed italic border-l-4 border-primary/50 pl-6 text-lg">
                     "Laila est une étoile montante de la scène afro-fusion
                     congolaise. Mêlant des textes poignants, une voix envoûtante

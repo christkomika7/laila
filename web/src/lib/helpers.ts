@@ -1,4 +1,5 @@
 import type { AlbumFormState, TrackFormState } from "#/types/album";
+import type { CheckoutPayload, CheckoutResponse } from "#/types/checkout";
 import type { State, Action } from "#/types/gallery";
 import apiServerClient from "./api";
 
@@ -125,4 +126,23 @@ export async function pollPaymentStatus(
   }
 
   throw new Error("Délai d'attente dépassé. Vérifiez votre téléphone.");
+}
+
+export async function callCheckout(
+  payload: CheckoutPayload,
+): Promise<CheckoutResponse> {
+  const res = await apiServerClient.fetch("/checkout", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error ?? `Erreur serveur (${res.status})`);
+  }
+
+  return data as CheckoutResponse;
 }

@@ -139,7 +139,7 @@ function RouteComponent() {
       <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
         <Header />
         <main className="grow flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-[#111] border border-red-900/30 rounded-2xl p-8 text-center">
+          <div className="max-w-md w-full bg-[#111] border border-red-900/30 rounded-lg p-8 text-center">
             <Clock className="w-16 h-16 text-amber-500 mx-auto mb-6" />
             <h1 className="text-2xl font-bold text-white mb-4">
               Traitement en cours
@@ -217,7 +217,7 @@ function RouteComponent() {
           </div>
 
           {/* Order summary */}
-          <div className="bg-[#161616] rounded-2xl p-6 border border-red-900/20 mb-8">
+          <div className="bg-[#161616] rounded-lg p-6 border border-red-900/20 mb-8">
             <div className="flex justify-between items-center mb-6 pb-6 border-b border-red-900/20">
               <div>
                 <p className="text-sm text-red-200/50 uppercase tracking-wider mb-1">
@@ -244,7 +244,7 @@ function RouteComponent() {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between bg-[#0a0a0a] p-3 rounded-xl border border-red-900/10"
+                    className="flex items-center justify-between bg-[#0a0a0a] p-3 rounded-md border border-red-900/10"
                   >
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded bg-muted overflow-hidden shrink-0">

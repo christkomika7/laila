@@ -5,37 +5,44 @@ import { stripe } from "../../lib/payment";
 import {
   checkStock,
   checkoutBodySchema,
-  dialCodeDigits,
   formatPawapayAmount,
   mapToStripeCurrency,
   toStripeAmount,
 } from "../../lib/checkout";
 import { computeTotal } from "../../lib/helpers";
+import { auth } from "../../lib/auth";
 
 export const checkoutRoutes = new Elysia({ prefix: "/checkout" }).post(
   "/",
-  async ({ body, set }) => {
+  async ({ body, set, request }) => {
     const { email, name, items, paymentMethod } = body;
 
-    console.log(JSON.stringify(body, null, 2));
+    const session = await auth.api
+      .getSession({ headers: request.headers })
+      .catch(() => null);
+    const userId = session?.user?.id ?? undefined;
 
-    // 1. Vérifier le stock
     const orderItemsData = await checkStock(items);
     const totalInCents = computeTotal(items);
     const currency = items[0].currency ?? "XAF";
 
-    // 2. Upsert Customer
+    console.log({ body });
+
     const customer = await prisma.customer.upsert({
       where: { email },
-      update: { name: name ?? undefined, phone: body.msisdn ?? undefined },
-      create: { email, name, phone: body.msisdn },
+      update: {
+        name: name ?? undefined,
+        phone: body.msisdn ?? undefined,
+        country: body.country,
+      },
+      create: { email, name, phone: body.msisdn, country: body.country },
     });
 
-    // 3. Créer Order + OrderItems + Payment dans une transaction
     const { order, payment } = await prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           customerId: customer.id,
+          userId,
           totalInCents,
           currency,
           billingCountry: body.billingCountry ?? body.country,
@@ -113,20 +120,16 @@ export const checkoutRoutes = new Elysia({ prefix: "/checkout" }).post(
         depositId,
         amount,
         currency,
-        correspondent: body.correspondent,
         payer: {
-          type: "MSISDN",
-          address: {
-            value: body.msisdn
-              .replace(/\D/g, "")
-              .replace(/^0/, dialCodeDigits(body.country)),
+          type: "MMO",
+          accountDetails: {
+            phoneNumber: body.msisdn.replace(/\D/g, ""),
+            provider: body.correspondent,
           },
         },
-        customerTimestamp: new Date().toISOString(),
-        statementDescription: `Commande ${order.id.slice(-8).toUpperCase()}`,
       };
 
-      const response = await fetch(`${env.PAWAPAY_BASE_URL}/deposits`, {
+      const response = await fetch(`${env.PAWAPAY_BASE_URL}/v2/deposits`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -136,6 +139,8 @@ export const checkoutRoutes = new Elysia({ prefix: "/checkout" }).post(
       });
 
       const data = await response.json();
+      console.log("[pawapay] Response status:", response.status);
+      console.log("[pawapay] Response data:", JSON.stringify(data, null, 2));
 
       if (!response.ok || data.status === "REJECTED") {
         await prisma.payment.update({
@@ -178,10 +183,13 @@ export const checkoutRoutes = new Elysia({ prefix: "/checkout" }).post(
   {
     body: checkoutBodySchema,
     error({ error, set }) {
+      const msg = error instanceof Error ? error.message : "Erreur interne";
+      if (msg.startsWith("Stock insuffisant")) {
+        set.status = 422;
+        return { error: msg };
+      }
       set.status = 500;
-      return {
-        error: error instanceof Error ? error.message : "Erreur interne",
-      };
+      return { error: msg };
     },
   },
 );

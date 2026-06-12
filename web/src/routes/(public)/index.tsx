@@ -5,16 +5,9 @@ import ImageWithFallback from "#/components/ui/image-with-fallback";
 import PremiumButton from "#/components/ui/premiem.button";
 import VideoAssetDisplay from "#/components/ui/video-asset-display";
 import TrackCard from "#/components/card/track-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "#/components/ui/dialog";
 import { useVideoAsset } from "#/hook/use-video-asset";
 import { useCartStore } from "#/store/use-cart-store";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -33,7 +26,6 @@ import { isResilience, resolveImg } from "#/lib/helpers";
 import type { Album, Track } from "#/types/album";
 import type { GalleryItem } from "#/types/gallery";
 import { toast } from "sonner";
-import PaymentForm from "#/components/form/payment-form";
 
 export const Route = createFileRoute("/(public)/")({
   head: () => ({
@@ -54,14 +46,6 @@ const aboutUrl3 =
   "https://horizons-cdn.hostinger.com/2250f31a-e042-4c1a-b279-00ce8467fe13/cefc09cba6d3c707651d4d42c0c7907e.jpg";
 const lailaLogoUrl =
   "https://horizons-cdn.hostinger.com/2250f31a-e042-4c1a-b279-00ce8467fe13/f17982153cc76fcc048f5cef0e446f0d.png";
-
-type PurchaseItem = {
-  type: "track" | "album";
-  title: string;
-  price: number;
-  albumId?: string;
-  trackId?: string;
-};
 
 function RouteComponent() {
   const heroCarousel = [
@@ -97,8 +81,6 @@ function RouteComponent() {
   const [currentPlayingTrackId, setCurrentPlayingTrackId] = useState<
     string | null
   >(null);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
-  const [purchaseItem, setPurchaseItem] = useState<PurchaseItem | null>(null);
 
   const items = useCartStore.use.items();
   const addTrack = useCartStore.use.addTrack();
@@ -106,6 +88,7 @@ function RouteComponent() {
   const removeItem = useCartStore.use.removeItem();
 
   const { videoUrl: featuredVideoUrl } = useVideoAsset();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLatestAlbum = async () => {
@@ -230,43 +213,19 @@ function RouteComponent() {
     toast.info(`« ${latestAlbum.title} » retiré du panier`);
   }, [albumCartKey, latestAlbum, removeItem]);
 
-  const openPaymentModal = useCallback((item: PurchaseItem) => {
-    setPurchaseItem(item);
-    setIsPaymentModalOpen(true);
-  }, []);
-
   const handleBuyAlbum = useCallback(() => {
-    if (!latestAlbum) return;
-    const totalPrice = latestAlbum.tracks.reduce(
-      (sum, t) => sum + (t.price ?? 0),
-      0,
-    );
-    openPaymentModal({
-      type: "album",
-      title: latestAlbum.title,
-      price: totalPrice,
-      albumId: latestAlbum.id,
-    });
-  }, [latestAlbum, openPaymentModal]);
+    if (!latestAlbum || albumInCart) return;
+    addAlbum(latestAlbum);
+    navigate({ to: "/checkout" });
+  }, [latestAlbum, albumInCart, addAlbum]);
 
   const handleBuyTrack = useCallback(
     (track: Track) => {
-      openPaymentModal({
-        type: "track",
-        title: track.title,
-        price: track.price ?? 850,
-        trackId: track.id,
-        albumId: latestAlbum?.id,
-      });
+      addTrack(track);
+      navigate({ to: "/checkout" });
     },
-    [latestAlbum, openPaymentModal],
+    [addTrack],
   );
-
-  const handlePaymentSuccess = useCallback(() => {
-    setIsPaymentModalOpen(false);
-    setPurchaseItem(null);
-    toast.success("Paiement effectué avec succès !");
-  }, []);
 
   const nextSlide = () =>
     setGalleryCarouselIndex((prev) => (prev + 1) % publicGallery.length);
@@ -274,8 +233,6 @@ function RouteComponent() {
     setGalleryCarouselIndex(
       (prev) => (prev - 1 + publicGallery.length) % publicGallery.length,
     );
-
-  console.log({ latestAlbum });
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-foreground">
@@ -442,13 +399,13 @@ function RouteComponent() {
                 </p>
                 <div className="flex flex-col gap-2 mb-10">
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-red-950/20 border border-red-900/30 rounded-xl p-4 text-center lg:text-left">
+                    <div className="bg-red-950/20 border border-red-900/30 rounded-md p-4 text-center lg:text-left">
                       <p className="text-3xl font-bold text-white font-mono">
                         {latestAlbum.tracks.length}
                       </p>
                       <p className="text-sm text-red-200/50 mt-1">Titres</p>
                     </div>
-                    <div className="bg-red-950/20 border border-red-900/30 rounded-xl p-4 text-center lg:text-left">
+                    <div className="bg-red-950/20 border border-red-900/30 rounded-md p-4 text-center lg:text-left">
                       <p className="text-3xl font-bold text-amber-400 font-mono">
                         {new Intl.NumberFormat("fr-FR", {
                           style: "currency",
@@ -548,7 +505,7 @@ function RouteComponent() {
                     captivante dans le son et l'image.
                   </p>
                 </div>
-                <div className="relative z-10 w-full aspect-video rounded-2xl overflow-hidden ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-[1.01]">
+                <div className="relative z-10 w-full aspect-video rounded-lg overflow-hidden ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-transform duration-500 group-hover:scale-[1.01]">
                   <iframe
                     className="w-full h-full bg-black"
                     src="https://www.youtube.com/embed/jFTU2eMUgZ4?rel=0&modestbranding=1"
@@ -575,12 +532,12 @@ function RouteComponent() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="w-full aspect-3/4 rounded-2xl bg-red-950/20 animate-pulse"
+                    className="w-full aspect-3/4 rounded-lg bg-red-950/20 animate-pulse"
                   />
                 ))}
               </div>
             ) : exclusiveError ? (
-              <div className="text-center text-red-400 py-12 bg-red-950/20 rounded-2xl border border-red-900/30">
+              <div className="text-center text-red-400 py-12 bg-red-950/20 rounded-lg border border-red-900/30">
                 <p>{exclusiveError}</p>
               </div>
             ) : exclusiveGallery.length > 0 ? (
@@ -639,7 +596,7 @@ function RouteComponent() {
                 <ImageWithFallback
                   src={aboutUrl1}
                   alt="Portrait premium de Laila"
-                  className="w-full aspect-3/4 object-cover rounded-2xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
+                  className="w-full aspect-3/4 object-cover rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
                 />
               </motion.div>
               <div className="col-span-1 space-y-6">
@@ -653,7 +610,7 @@ function RouteComponent() {
                   <ImageWithFallback
                     src={aboutUrl2}
                     alt="Laila veste marron"
-                    className="w-full aspect-square object-cover rounded-2xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
+                    className="w-full aspect-square object-cover rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
                   />
                 </motion.div>
                 <motion.div
@@ -666,7 +623,7 @@ function RouteComponent() {
                   <ImageWithFallback
                     src={aboutUrl3}
                     alt="Laila effet halo"
-                    className="w-full aspect-3/4 object-cover rounded-2xl shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
+                    className="w-full aspect-3/4 object-cover rounded-lg shadow-2xl transition-transform duration-700 group-hover:scale-[1.02] ring-1 ring-white/5"
                   />
                 </motion.div>
               </div>
@@ -781,33 +738,6 @@ function RouteComponent() {
       )}
 
       <Footer />
-
-      <Dialog open={isPaymentModalOpen} onOpenChange={setIsPaymentModalOpen}>
-        <DialogContent className="bg-[#111] border-neutral-800 text-white max-w-md w-[95vw] rounded-2xl p-0 overflow-hidden flex flex-col max-h-[90dvh]">
-          {/* ── Header fixe ── */}
-          <DialogHeader className="px-5 pt-5 pb-3 border-b border-neutral-800 shrink-0">
-            <DialogTitle className="text-xl font-bold text-white">
-              Acheter {purchaseItem?.type === "track" ? "le Titre" : "l'Album"}
-            </DialogTitle>
-            <DialogDescription className="text-neutral-400 mt-1 text-sm">
-              <span className="block text-neutral-200 font-medium">
-                {purchaseItem?.title}
-              </span>
-              Paiement sécurisé via Mobile Money ou carte bancaire.
-            </DialogDescription>
-          </DialogHeader>
-
-          {/* ── Corps scrollable ── */}
-          <div className="flex-1 overflow-y-auto px-5 py-4 min-h-0">
-            <PaymentForm
-              amount={purchaseItem?.price ?? 0}
-              albumId={purchaseItem?.albumId}
-              trackId={purchaseItem?.trackId}
-              onSuccess={handlePaymentSuccess}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

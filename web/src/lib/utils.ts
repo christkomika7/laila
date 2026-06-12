@@ -44,7 +44,14 @@ export const getBasePrice = (product: Product): number => {
   return first.salePriceInCents ?? first.priceInCents;
 };
 
-export const formatCurrency = (amountInCents: number, currency: string) => {
-  const symbol = currency === "XOF" ? "CFA" : "FCFA";
-  return `${amountInCents.toLocaleString("fr-FR")} ${symbol}`;
+export const formatCurrency = (amount: number, currency = "XAF") => {
+  try {
+    return new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(amount);
+  } catch {
+    return `${Math.round(amount).toLocaleString("fr-FR")} ${currency}`;
+  }
 };

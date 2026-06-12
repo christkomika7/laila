@@ -31,7 +31,7 @@ const BookPage = ({ item, pageNumber, isLeft, preload }: BookPageProps) => {
           <div className="w-12 h-px bg-[hsl(var(--book-gold))]/50 mx-auto" />
         </div>
 
-        <div className="flex-1 relative rounded-xl overflow-hidden border border-white/10 shadow-inner bg-black/50 mb-6 min-h-[300px]">
+        <div className="flex-1 relative rounded-md overflow-hidden border border-white/10 shadow-inner bg-black/50 mb-6 min-h-[300px]">
           <BookMediaLoader
             src={item.imageUrl ?? null}
             type={item.mediaType === "VIDEO" ? "video" : "image"}

@@ -174,7 +174,7 @@ function RouteComponent() {
         >
           <ArrowLeft size={16} /> Retour à la boutique
         </Link>
-        <div className="text-center text-neutral-400 p-8 bg-[#111] rounded-2xl border border-neutral-800/60">
+        <div className="text-center text-neutral-400 p-8 bg-[#111] rounded-lg border border-neutral-800/60">
           <XCircle className="mx-auto h-16 w-16 mb-4 opacity-30" />
           <p className="mb-6">{error ?? "Produit introuvable."}</p>
         </div>
@@ -214,7 +214,7 @@ function RouteComponent() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="relative overflow-hidden rounded-2xl border border-neutral-800/70 aspect-4/5 bg-[#111]">
+            <div className="relative overflow-hidden rounded-lg border border-neutral-800/70 aspect-4/5 bg-[#111]">
               <img
                 src={currentImage?.url || placeholderImage}
                 alt={product.title}
@@ -259,7 +259,7 @@ function RouteComponent() {
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`shrink-0 w-16 h-16 rounded-xl overflow-hidden transition-all ${
+                    className={`shrink-0 w-16 h-16 rounded-md overflow-hidden transition-all ${
                       index === currentImageIndex
                         ? "ring-2 ring-amber-500/60 scale-105"
                         : "ring-1 ring-neutral-800/80 opacity-50 hover:opacity-80"
@@ -336,7 +336,7 @@ function RouteComponent() {
                       <button
                         key={variant.id}
                         onClick={() => handleVariantSelect(variant)}
-                        className={`relative h-10 px-5 rounded-xl border text-sm font-medium transition-all ${
+                        className={`relative h-10 px-5 rounded-md border text-sm font-medium transition-all ${
                           isSelected
                             ? "bg-neutral-800 text-neutral-50 border-neutral-600"
                             : "bg-[#111] border-neutral-800/60 text-neutral-500 hover:border-neutral-600 hover:text-neutral-200"
@@ -384,7 +384,7 @@ function RouteComponent() {
             <div className="mt-auto pt-5 border-t border-neutral-800/60 space-y-4">
               {/* Bannière panier */}
               {alreadyInCart && cartItem && (
-                <div className="flex items-center justify-between bg-green-950/30 border border-neutral-800/60 rounded-xl px-4 py-3">
+                <div className="flex items-center justify-between bg-green-950/30 border border-neutral-800/60 rounded-md px-4 py-3">
                   <div className="flex items-center gap-2 text-sm text-green-400/90">
                     <Package size={14} />
                     <span>Dans le panier</span>
@@ -426,7 +426,7 @@ function RouteComponent() {
 
               {/* Quantité + bouton */}
               <div className="flex items-center gap-3">
-                <div className="flex items-center bg-[#111] border border-neutral-800/60 rounded-xl p-1 h-12">
+                <div className="flex items-center bg-[#111] border border-neutral-800/60 rounded-md p-1 h-12">
                   <button
                     onClick={() => handleQuantityChange(-1)}
                     className="h-9 w-9 rounded-lg flex items-center justify-center text-neutral-500 hover:bg-neutral-800 hover:text-neutral-100 transition-colors"
@@ -447,7 +447,7 @@ function RouteComponent() {
                 <Button
                   onClick={handleAddToCart}
                   disabled={!canAddToCart || !product.purchasable}
-                  className={`flex-1 h-12 font-semibold text-base rounded-xl transition-all hover:scale-[1.01] active:scale-[0.99] border-none disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`flex-1 h-12 font-semibold text-base rounded-md transition-all hover:scale-[1.01] active:scale-[0.99] border-none disabled:opacity-40 disabled:cursor-not-allowed ${
                     alreadyInCart
                       ? "bg-neutral-800 hover:bg-neutral-700 text-neutral-100"
                       : "bg-amber-500 hover:bg-amber-400 text-[#0a0a0a]"

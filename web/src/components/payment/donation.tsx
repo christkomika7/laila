@@ -6,10 +6,17 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
-import { Heart, Loader2 } from "lucide-react";
+import { CreditCard, Heart, Loader2, Smartphone } from "lucide-react";
 import { useState } from "react";
+import { Input } from "../ui/input";
 
 const PRESET_AMOUNTS = [500, 1000, 2000, 5000, 10000];
+
+// Opérateurs Congo par défaut — à étendre si besoin
+const MOMO_OPERATORS = [
+  { code: "MTN_MOMO_COG", name: "MTN MoMo", dialCode: "+242" },
+  { code: "AIRTEL_COG", name: "Airtel Money", dialCode: "+242" },
+];
 
 function DonationStripeForm({
   donationId,
@@ -49,29 +56,32 @@ function DonationStripeForm({
       setLoading(false);
       return;
     }
+
     if (paymentIntent?.status === "succeeded") {
       onSuccess();
       return;
     }
 
-    // Poll si webhook nécessaire
+    // Poll
     let attempts = 0;
     const interval = setInterval(async () => {
       attempts++;
-      const res = await apiServerClient.fetch(
-        `/donations/${donationId}/status`,
-      );
-      if (res.ok) {
-        const { status } = await res.json();
-        if (status === "COMPLETED") {
-          clearInterval(interval);
-          onSuccess();
+      try {
+        const res = await apiServerClient.fetch(
+          `/donations/${donationId}/status`,
+        );
+        if (res.ok) {
+          const { status } = await res.json();
+          if (status === "COMPLETED") {
+            clearInterval(interval);
+            onSuccess();
+          }
+          if (status === "FAILED") {
+            clearInterval(interval);
+            onError("Don refusé.");
+          }
         }
-        if (status === "FAILED") {
-          clearInterval(interval);
-          onError("Don refusé.");
-        }
-      }
+      } catch {}
       if (attempts >= 20) {
         clearInterval(interval);
         onError("Délai dépassé.");
@@ -94,7 +104,7 @@ function DonationStripeForm({
           </>
         ) : (
           <>
-            <Heart className="w-4 h-4" /> Envoyer le don
+            <Heart className="w-4 h-4" /> Confirmer le don
           </>
         )}
       </button>
@@ -105,9 +115,15 @@ function DonationStripeForm({
 export function DonationForm({ email }: { email: string }) {
   const [amount, setAmount] = useState<number | "">("");
   const [customAmount, setCustomAmount] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "mobile_money">(
+    "card",
+  );
+  const [msisdn, setMsisdn] = useState("");
+  const [operator, setOperator] = useState("");
   const [loading, setLoading] = useState(false);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [donationId, setDonationId] = useState<string | null>(null);
+  const [polling, setPolling] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -118,24 +134,68 @@ export function DonationForm({ email }: { email: string }) {
       setError("Montant minimum : 500 XAF");
       return;
     }
+    if (paymentMethod === "mobile_money" && (!msisdn || !operator)) {
+      setError("Numéro et opérateur requis.");
+      return;
+    }
     setLoading(true);
     setError(null);
 
     try {
       const res = await apiServerClient.fetch("/donations", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           amount: finalAmount,
           currency: "XAF",
-          paymentMethod: "card",
+          paymentMethod,
+          ...(paymentMethod === "mobile_money" && {
+            msisdn: msisdn.replace(/\s/g, ""),
+            correspondent: operator,
+            country: "COG",
+          }),
         }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setClientSecret(data.clientSecret);
-      setDonationId(data.donationId);
+
+      if (data.provider === "stripe") {
+        setClientSecret(data.clientSecret);
+        setDonationId(data.donationId);
+      } else {
+        // PawaPay — démarrer le polling
+        setDonationId(data.donationId);
+        setPolling(true);
+        let attempts = 0;
+        const interval = setInterval(async () => {
+          attempts++;
+          try {
+            const r = await apiServerClient.fetch(
+              `/donations/${data.donationId}/status`,
+            );
+            if (r.ok) {
+              const { status } = await r.json();
+              if (status === "COMPLETED") {
+                clearInterval(interval);
+                setPolling(false);
+                setSuccess(true);
+              }
+              if (status === "FAILED") {
+                clearInterval(interval);
+                setPolling(false);
+                setError("Don refusé. Veuillez réessayer.");
+              }
+            }
+          } catch {}
+          if (attempts >= 40) {
+            clearInterval(interval);
+            setPolling(false);
+            setError("Délai dépassé. Vérifiez votre téléphone.");
+          }
+        }, 3000);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur");
     } finally {
@@ -148,6 +208,18 @@ export function DonationForm({ email }: { email: string }) {
       <div className="text-center space-y-2 py-4">
         <Heart className="w-10 h-10 text-emerald-500 mx-auto" />
         <p className="text-white font-semibold">Merci pour votre don ! 💚</p>
+      </div>
+    );
+  }
+
+  if (polling) {
+    return (
+      <div className="text-center space-y-3 py-4">
+        <Loader2 className="w-8 h-8 text-emerald-500 mx-auto animate-spin" />
+        <p className="text-white font-semibold">Validez sur votre téléphone</p>
+        <p className="text-neutral-400 text-sm">
+          Entrez votre code PIN MoMo pour confirmer le don.
+        </p>
       </div>
     );
   }
@@ -174,7 +246,11 @@ export function DonationForm({ email }: { email: string }) {
                   setAmount(a);
                   setCustomAmount("");
                 }}
-                className={`py-2 rounded-lg text-sm font-medium border transition-all ${amount === a ? "border-emerald-500 bg-emerald-500/10 text-emerald-400" : "border-neutral-700 text-neutral-400 hover:border-neutral-500"}`}
+                className={`py-2 rounded-lg text-sm font-medium border transition-all ${
+                  amount === a
+                    ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                    : "border-neutral-700 text-neutral-400 hover:border-neutral-500"
+                }`}
               >
                 {a.toLocaleString()}
               </button>
@@ -183,7 +259,7 @@ export function DonationForm({ email }: { email: string }) {
 
           {/* Montant personnalisé */}
           <div className="relative">
-            <input
+            <Input
               type="number"
               placeholder="Autre montant (XAF)"
               value={customAmount}
@@ -191,12 +267,67 @@ export function DonationForm({ email }: { email: string }) {
                 setCustomAmount(e.target.value);
                 setAmount("");
               }}
-              className="w-full h-11 px-4 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="w-full h-11 px-4 rounded-md border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs text-neutral-500">
               XAF
             </span>
           </div>
+
+          {/* Méthode de paiement */}
+          <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-900 rounded-xl border border-neutral-800">
+            {[
+              { id: "card" as const, label: "Carte", icon: CreditCard },
+              {
+                id: "mobile_money" as const,
+                label: "Mobile Money",
+                icon: Smartphone,
+              },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setPaymentMethod(id)}
+                className={`flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all ${
+                  paymentMethod === id
+                    ? "bg-neutral-700 text-white"
+                    : "text-neutral-500 hover:text-neutral-300"
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                {label}
+              </button>
+            ))}
+          </div>
+
+          {/* Champs Mobile Money */}
+          {paymentMethod === "mobile_money" && (
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                {MOMO_OPERATORS.map((op) => (
+                  <button
+                    key={op.code}
+                    type="button"
+                    onClick={() => setOperator(op.code)}
+                    className={`py-2 px-3 rounded-lg border text-sm font-medium transition-all ${
+                      operator === op.code
+                        ? "border-emerald-500 bg-emerald-500/10 text-emerald-400"
+                        : "border-neutral-700 text-neutral-400 hover:border-neutral-500"
+                    }`}
+                  >
+                    {op.name}
+                  </button>
+                ))}
+              </div>
+              <Input
+                type="tel"
+                placeholder="242 06 XXX XXXX"
+                value={msisdn}
+                onChange={(e) => setMsisdn(e.target.value)}
+                className="w-full h-11 px-4 rounded-xl border border-neutral-700 bg-neutral-900 text-white placeholder:text-neutral-600 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              />
+            </div>
+          )}
 
           {error && <p className="text-amber-400 text-sm">{error}</p>}
 

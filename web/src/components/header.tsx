@@ -113,7 +113,7 @@ const Header = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="text-muted-foreground hover:text-foreground hover:bg-muted gap-2"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted gap-1 ml-4"
           >
             <User className="size-4" />
             <span className="hidden xl:inline">Connexion</span>
@@ -191,7 +191,7 @@ const Header = () => {
     return (
       <>
         {isOnPortal ? (
-          <div className="flex items-center gap-2 text-base font-medium px-4 py-3 rounded-lg text-primary bg-primary/5 opacity-70">
+          <div className="flex items-center gap-2 text-base font-medium px-4 py-3 rounded-lg text-primary bg-primary/5 opacity/70">
             {isAdmin ? (
               <LayoutDashboard className="h-[18px] w-[18px]" />
             ) : (
@@ -233,7 +233,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/75 backdrop-blur-2xl border-b border-border shadow-sm">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}

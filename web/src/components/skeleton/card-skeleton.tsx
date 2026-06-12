@@ -16,7 +16,7 @@ export const Skeleton = ({ className, ...props }: SkeletonProps) => {
 
 export const CardSkeleton = () => (
   <div className="flex flex-col space-y-3">
-    <Skeleton className="h-[250px] w-full rounded-xl" />
+    <Skeleton className="h-[250px] w-full rounded-md" />
     <div className="space-y-2">
       <Skeleton className="h-4 w-[250px]" />
       <Skeleton className="h-4 w-[200px]" />
@@ -25,7 +25,7 @@ export const CardSkeleton = () => (
 );
 
 export const PortraitSkeleton = () => (
-  <Skeleton className="aspect-3/4 w-full rounded-xl" />
+  <Skeleton className="aspect-3/4 w-full rounded-md" />
 );
 
 export default Skeleton;

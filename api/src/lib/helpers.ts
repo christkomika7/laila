@@ -201,3 +201,20 @@ export function isPhysicalProduct(rawVariantId: string): boolean {
     !rawVariantId.startsWith("track:") && !rawVariantId.startsWith("album:")
   );
 }
+
+export function safe(name: string) {
+  return name.replace(/[/\\:*?"<>|]/g, "_").trim();
+}
+
+export async function fetchBuffer(url: string): Promise<Buffer> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Impossible de télécharger: ${url}`);
+  const ab = await res.arrayBuffer();
+  return Buffer.from(ab);
+}
+
+export function inferExt(url: string): string {
+  const u = url.split("?")[0];
+  const match = u.match(/\.(mp3|m4a|flac|wav|aac|ogg)$/i);
+  return match ? match[1].toLowerCase() : "mp3";
+}

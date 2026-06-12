@@ -4,6 +4,7 @@ import { Button } from "#/components/ui/button";
 import { Input } from "#/components/ui/input";
 import { Label } from "#/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
+import MyInvoicesTab from "#/components/user/invoice";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -229,7 +230,7 @@ function RouteComponent() {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-8 bg-muted/50 p-1 rounded-xl h-auto! w-full">
+          <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-8 bg-muted/50 p-1 rounded-md h-auto! w-full">
             {[
               { value: "profile", icon: User, label: "Profil" },
               { value: "purchases", icon: ShoppingBag, label: "Achats" },
@@ -249,7 +250,7 @@ function RouteComponent() {
 
           {/* ── Profil ── */}
           <TabsContent value="profile" className="space-y-6">
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
               <h2 className="text-xl font-semibold mb-6 text-foreground">
                 Informations Personnelles
               </h2>
@@ -296,7 +297,7 @@ function RouteComponent() {
 
           {/* ── Achats ── */}
           <TabsContent value="purchases">
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
               <h2 className="text-xl font-semibold mb-6 text-foreground">
                 Historique des Achats
               </h2>
@@ -312,7 +313,7 @@ function RouteComponent() {
                   {orders.map((order) => (
                     <div
                       key={order.id}
-                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-xl border border-border bg-background/50 gap-4"
+                      className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-md border border-border bg-background/50 gap-4"
                     >
                       <div>
                         <p className="font-medium text-foreground">
@@ -356,7 +357,7 @@ function RouteComponent() {
 
           {/* ── Téléchargements ── */}
           <TabsContent value="downloads">
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
               <h2 className="text-xl font-semibold mb-6 text-foreground">
                 Mes Téléchargements
               </h2>
@@ -372,7 +373,7 @@ function RouteComponent() {
                   {downloads.map((download) => (
                     <div
                       key={download.id}
-                      className="flex items-center justify-between p-4 rounded-xl border border-border bg-background/50"
+                      className="flex items-center justify-between p-4 rounded-md border border-border bg-background/50"
                     >
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded bg-muted overflow-hidden shrink-0">
@@ -409,68 +410,17 @@ function RouteComponent() {
 
           {/* ── Factures ── */}
           <TabsContent value="invoices">
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
-              <h2 className="text-xl font-semibold mb-6 text-foreground">
-                Mes Factures
-              </h2>
-              {invoices.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                  <p className="text-muted-foreground">
-                    Aucune facture disponible.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {invoices.map((invoice) => (
-                    <div
-                      key={invoice.id}
-                      className="flex items-center justify-between p-4 rounded-xl border border-border bg-background/50"
-                    >
-                      <div>
-                        <p className="font-medium text-foreground">
-                          {invoice.invoiceNumber}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {format(new Date(invoice.created), "dd/MM/yyyy")}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <span className="font-bold text-foreground">
-                          {invoice.total.toLocaleString("fr-FR")} FCFA
-                        </span>
-                        {invoice.pdfUrl && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="text-primary hover:text-primary hover:bg-primary/10"
-                            asChild
-                          >
-                            <a
-                              href={invoice.pdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Download className="w-4 h-4" />
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <MyInvoicesTab />
           </TabsContent>
 
           {/* ── Paramètres ── */}
           <TabsContent value="settings">
-            <div className="bg-card border border-border rounded-2xl p-6 md:p-8 shadow-sm">
+            <div className="bg-card border border-border rounded-lg p-6 md:p-8 shadow-sm">
               <h2 className="text-xl font-semibold mb-6 text-foreground">
                 Paramètres du Compte
               </h2>
               <div className="max-w-md space-y-6">
-                <div className="p-4 rounded-xl border border-border bg-background/50">
+                <div className="p-4 rounded-md border border-border bg-background/50">
                   <h3 className="font-medium text-foreground mb-2">
                     Mot de passe
                   </h3>

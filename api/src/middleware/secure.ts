@@ -1,7 +1,7 @@
 import type { Context } from "elysia";
 import { auth } from "../lib/auth";
 
-export async function requireAdmin({ request, set, store }: Context) {
+export async function requireAdmin({ request, set }: Context) {
   const session = await auth.api.getSession({
     headers: request.headers,
   });

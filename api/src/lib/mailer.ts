@@ -19,7 +19,7 @@ type SendMailOptions = {
 
 export async function sendMail({ to, title, body }: SendMailOptions) {
   await transporter.sendMail({
-    from: `"Laïla Music" <${process.env.SMTP_USER}>`,
+    from: env.SMTP_USER,
     to,
     subject: title,
     html: `
@@ -46,4 +46,14 @@ export async function sendMail({ to, title, body }: SendMailOptions) {
 </body>
 </html>`,
   });
+}
+
+export async function sendMailSafe(options: SendMailOptions): Promise<void> {
+  try {
+    console.log("🚀🚀🚀 sendMailSafe -> ", options);
+    const res = await sendMail(options);
+    console.log("🚀🚀🚀 res -> ", res);
+  } catch (err) {
+    console.error(`[mailer] Échec envoi à ${options.to}:`, err);
+  }
 }

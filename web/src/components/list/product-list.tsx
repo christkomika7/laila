@@ -96,7 +96,7 @@ const ProductsList = () => {
 
   if (error) {
     return (
-      <div className="text-center text-destructive p-8 bg-destructive/10 rounded-2xl">
+      <div className="text-center text-destructive p-8 bg-destructive/10 rounded-lg">
         <p className="mb-4">{error}</p>
         <button
           onClick={fetchProducts}
@@ -160,7 +160,7 @@ const ProductsList = () => {
       </div>
 
       {filtersOpen && (
-        <div className="bg-card border border-border rounded-2xl p-5 space-y-5">
+        <div className="bg-card border border-border rounded-lg p-5 space-y-5">
           {maxPrice > 0 && (
             <div>
               <div className="flex items-center justify-between mb-3">
