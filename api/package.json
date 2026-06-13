@@ -5,6 +5,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/index.ts"
   },
+  "prisma": {
+    "seed": "bun prisma/seed.ts"
+  },
   "dependencies": {
     "@elysia/static": "^1.4.11",
     "@elysiajs/cors": "^1.4.2",

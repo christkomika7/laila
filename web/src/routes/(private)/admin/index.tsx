@@ -5,6 +5,7 @@ import { AdminMessagesTab } from "#/components/admin/contact-message";
 import { AdminGalleryTab } from "#/components/admin/gallery";
 import AdminInvoiceTab from "#/components/admin/invoice";
 import { AdminProductTab } from "#/components/admin/product";
+import AdminProfileTab from "#/components/admin/profil";
 import Header from "#/components/header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { createFileRoute, redirect } from "@tanstack/react-router";
@@ -38,8 +39,15 @@ function RouteComponent() {
             Tableau de Bord Admin
           </h1>
 
-          <Tabs defaultValue="customers" className="space-y-8">
-            <TabsList className="grid grid-cols-2 md:grid-cols-7 mb-8 bg-muted/50 p-1 rounded-md h-auto!">
+          <Tabs defaultValue="profile" className="space-y-8">
+            <TabsList className="grid grid-cols-2 md:grid-cols-8 mb-8 bg-muted/50 p-1 rounded-md h-auto!">
+              <TabsTrigger
+                value="profile"
+                className="py-3 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm rounded-lg"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Profil
+              </TabsTrigger>
               <TabsTrigger
                 value="customers"
                 className="py-3 data-[state=active]:bg-card data-[state=active]:text-foreground data-[state=active]:shadow-sm rounded-lg"
@@ -90,6 +98,11 @@ function RouteComponent() {
                 Analytique
               </TabsTrigger>
             </TabsList>
+
+            {/* ── Profils ── */}
+            <TabsContent value="profile">
+              <AdminProfileTab />
+            </TabsContent>
 
             {/* ── Clients ── */}
             <TabsContent value="customers">
