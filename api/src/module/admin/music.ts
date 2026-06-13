@@ -139,8 +139,6 @@ export const musicRoutes = new Elysia({ prefix: "/music" })
           await Storage.delete(existing.coverUrl).catch(() => {});
       }
 
-      console.log({ body });
-
       const album = await prisma.album.update({
         where: { id: params.id },
         data: {

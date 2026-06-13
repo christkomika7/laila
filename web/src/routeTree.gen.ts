@@ -11,9 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as publicIndexRouteImport } from './routes/(public)/index'
 import { Route as publicVideographyRouteImport } from './routes/(public)/videography'
-import { Route as publicSuccessRouteImport } from './routes/(public)/success'
 import { Route as publicStoreRouteImport } from './routes/(public)/store'
-import { Route as publicReleasereleaseIdRouteImport } from './routes/(public)/release$releaseId'
 import { Route as publicPressbookRouteImport } from './routes/(public)/pressbook'
 import { Route as publicPaymentRouteImport } from './routes/(public)/payment'
 import { Route as publicOrdersRouteImport } from './routes/(public)/orders'
@@ -41,19 +39,9 @@ const publicVideographyRoute = publicVideographyRouteImport.update({
   path: '/videography',
   getParentRoute: () => rootRouteImport,
 } as any)
-const publicSuccessRoute = publicSuccessRouteImport.update({
-  id: '/(public)/success',
-  path: '/success',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const publicStoreRoute = publicStoreRouteImport.update({
   id: '/(public)/store',
   path: '/store',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const publicReleasereleaseIdRoute = publicReleasereleaseIdRouteImport.update({
-  id: '/(public)/release$releaseId',
-  path: '/release$releaseId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const publicPressbookRoute = publicPressbookRouteImport.update({
@@ -150,9 +138,7 @@ export interface FileRoutesByFullPath {
   '/orders': typeof publicOrdersRoute
   '/payment': typeof publicPaymentRoute
   '/pressbook': typeof publicPressbookRoute
-  '/release$releaseId': typeof publicReleasereleaseIdRoute
   '/store': typeof publicStoreRoute
-  '/success': typeof publicSuccessRoute
   '/videography': typeof publicVideographyRoute
   '/': typeof publicIndexRoute
   '/album/$albumId': typeof publicAlbumAlbumIdRoute
@@ -173,9 +159,7 @@ export interface FileRoutesByTo {
   '/orders': typeof publicOrdersRoute
   '/payment': typeof publicPaymentRoute
   '/pressbook': typeof publicPressbookRoute
-  '/release$releaseId': typeof publicReleasereleaseIdRoute
   '/store': typeof publicStoreRoute
-  '/success': typeof publicSuccessRoute
   '/videography': typeof publicVideographyRoute
   '/': typeof publicIndexRoute
   '/album/$albumId': typeof publicAlbumAlbumIdRoute
@@ -197,9 +181,7 @@ export interface FileRoutesById {
   '/(public)/orders': typeof publicOrdersRoute
   '/(public)/payment': typeof publicPaymentRoute
   '/(public)/pressbook': typeof publicPressbookRoute
-  '/(public)/release$releaseId': typeof publicReleasereleaseIdRoute
   '/(public)/store': typeof publicStoreRoute
-  '/(public)/success': typeof publicSuccessRoute
   '/(public)/videography': typeof publicVideographyRoute
   '/(public)/': typeof publicIndexRoute
   '/(public)/album/$albumId': typeof publicAlbumAlbumIdRoute
@@ -222,9 +204,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/payment'
     | '/pressbook'
-    | '/release$releaseId'
     | '/store'
-    | '/success'
     | '/videography'
     | '/'
     | '/album/$albumId'
@@ -245,9 +225,7 @@ export interface FileRouteTypes {
     | '/orders'
     | '/payment'
     | '/pressbook'
-    | '/release$releaseId'
     | '/store'
-    | '/success'
     | '/videography'
     | '/'
     | '/album/$albumId'
@@ -268,9 +246,7 @@ export interface FileRouteTypes {
     | '/(public)/orders'
     | '/(public)/payment'
     | '/(public)/pressbook'
-    | '/(public)/release$releaseId'
     | '/(public)/store'
-    | '/(public)/success'
     | '/(public)/videography'
     | '/(public)/'
     | '/(public)/album/$albumId'
@@ -292,9 +268,7 @@ export interface RootRouteChildren {
   publicOrdersRoute: typeof publicOrdersRoute
   publicPaymentRoute: typeof publicPaymentRoute
   publicPressbookRoute: typeof publicPressbookRoute
-  publicReleasereleaseIdRoute: typeof publicReleasereleaseIdRoute
   publicStoreRoute: typeof publicStoreRoute
-  publicSuccessRoute: typeof publicSuccessRoute
   publicVideographyRoute: typeof publicVideographyRoute
   publicIndexRoute: typeof publicIndexRoute
   publicAlbumAlbumIdRoute: typeof publicAlbumAlbumIdRoute
@@ -319,25 +293,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicVideographyRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(public)/success': {
-      id: '/(public)/success'
-      path: '/success'
-      fullPath: '/success'
-      preLoaderRoute: typeof publicSuccessRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/(public)/store': {
       id: '/(public)/store'
       path: '/store'
       fullPath: '/store'
       preLoaderRoute: typeof publicStoreRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(public)/release$releaseId': {
-      id: '/(public)/release$releaseId'
-      path: '/release$releaseId'
-      fullPath: '/release$releaseId'
-      preLoaderRoute: typeof publicReleasereleaseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(public)/pressbook': {
@@ -468,9 +428,7 @@ const rootRouteChildren: RootRouteChildren = {
   publicOrdersRoute: publicOrdersRoute,
   publicPaymentRoute: publicPaymentRoute,
   publicPressbookRoute: publicPressbookRoute,
-  publicReleasereleaseIdRoute: publicReleasereleaseIdRoute,
   publicStoreRoute: publicStoreRoute,
-  publicSuccessRoute: publicSuccessRoute,
   publicVideographyRoute: publicVideographyRoute,
   publicIndexRoute: publicIndexRoute,
   publicAlbumAlbumIdRoute: publicAlbumAlbumIdRoute,

@@ -26,8 +26,6 @@ export const checkoutRoutes = new Elysia({ prefix: "/checkout" }).post(
     const totalInCents = computeTotal(items);
     const currency = items[0].currency ?? "XAF";
 
-    console.log({ body });
-
     const customer = await prisma.customer.upsert({
       where: { email },
       update: {

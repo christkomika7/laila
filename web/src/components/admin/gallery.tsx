@@ -50,7 +50,6 @@ export function AdminGalleryTab() {
       });
       if (!res.ok) throw new Error();
       const data = await res.json();
-      console.log({ data });
       setItems(Array.isArray(data) ? data : []);
     } catch {
       toast.error("Impossible de charger la galerie.");

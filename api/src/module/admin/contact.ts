@@ -54,8 +54,6 @@ export const contactRoutes = new Elysia({ prefix: "/contact" })
         orderBy: { createdAt: "desc" },
       });
 
-      console.log({ messages });
-
       return messages;
     },
     { beforeHandle: [requireAdmin] },
