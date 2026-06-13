@@ -21,8 +21,10 @@ import { Route as publicMusicRouteImport } from './routes/(public)/music'
 import { Route as publicGalleryRouteImport } from './routes/(public)/gallery'
 import { Route as publicContactRouteImport } from './routes/(public)/contact'
 import { Route as publicCheckoutRouteImport } from './routes/(public)/checkout'
+import { Route as authResetPasswordRouteImport } from './routes/(auth)/reset-password'
 import { Route as authRegisterRouteImport } from './routes/(auth)/register'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as authEmailVerifiedRouteImport } from './routes/(auth)/email-verified'
 import { Route as privateUserIndexRouteImport } from './routes/(private)/user/index'
 import { Route as privateAdminIndexRouteImport } from './routes/(private)/admin/index'
@@ -89,6 +91,11 @@ const publicCheckoutRoute = publicCheckoutRouteImport.update({
   path: '/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authResetPasswordRoute = authResetPasswordRouteImport.update({
+  id: '/(auth)/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const authRegisterRoute = authRegisterRouteImport.update({
   id: '/(auth)/register',
   path: '/register',
@@ -97,6 +104,11 @@ const authRegisterRoute = authRegisterRouteImport.update({
 const authLoginRoute = authLoginRouteImport.update({
   id: '/(auth)/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
+  id: '/(auth)/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authEmailVerifiedRoute = authEmailVerifiedRouteImport.update({
@@ -127,8 +139,10 @@ const publicAlbumAlbumIdRoute = publicAlbumAlbumIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/email-verified': typeof authEmailVerifiedRoute
+  '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/reset-password': typeof authResetPasswordRoute
   '/checkout': typeof publicCheckoutRoute
   '/contact': typeof publicContactRoute
   '/gallery': typeof publicGalleryRoute
@@ -148,8 +162,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/email-verified': typeof authEmailVerifiedRoute
+  '/forgot-password': typeof authForgotPasswordRoute
   '/login': typeof authLoginRoute
   '/register': typeof authRegisterRoute
+  '/reset-password': typeof authResetPasswordRoute
   '/checkout': typeof publicCheckoutRoute
   '/contact': typeof publicContactRoute
   '/gallery': typeof publicGalleryRoute
@@ -170,8 +186,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(auth)/email-verified': typeof authEmailVerifiedRoute
+  '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/register': typeof authRegisterRoute
+  '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(public)/checkout': typeof publicCheckoutRoute
   '/(public)/contact': typeof publicContactRoute
   '/(public)/gallery': typeof publicGalleryRoute
@@ -193,8 +211,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/email-verified'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/checkout'
     | '/contact'
     | '/gallery'
@@ -214,8 +234,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/email-verified'
+    | '/forgot-password'
     | '/login'
     | '/register'
+    | '/reset-password'
     | '/checkout'
     | '/contact'
     | '/gallery'
@@ -235,8 +257,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/(auth)/email-verified'
+    | '/(auth)/forgot-password'
     | '/(auth)/login'
     | '/(auth)/register'
+    | '/(auth)/reset-password'
     | '/(public)/checkout'
     | '/(public)/contact'
     | '/(public)/gallery'
@@ -257,8 +281,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   authEmailVerifiedRoute: typeof authEmailVerifiedRoute
+  authForgotPasswordRoute: typeof authForgotPasswordRoute
   authLoginRoute: typeof authLoginRoute
   authRegisterRoute: typeof authRegisterRoute
+  authResetPasswordRoute: typeof authResetPasswordRoute
   publicCheckoutRoute: typeof publicCheckoutRoute
   publicContactRoute: typeof publicContactRoute
   publicGalleryRoute: typeof publicGalleryRoute
@@ -363,6 +389,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof publicCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(auth)/register': {
       id: '/(auth)/register'
       path: '/register'
@@ -375,6 +408,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/forgot-password': {
+      id: '/(auth)/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof authForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/(auth)/email-verified': {
@@ -417,8 +457,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   authEmailVerifiedRoute: authEmailVerifiedRoute,
+  authForgotPasswordRoute: authForgotPasswordRoute,
   authLoginRoute: authLoginRoute,
   authRegisterRoute: authRegisterRoute,
+  authResetPasswordRoute: authResetPasswordRoute,
   publicCheckoutRoute: publicCheckoutRoute,
   publicContactRoute: publicContactRoute,
   publicGalleryRoute: publicGalleryRoute,

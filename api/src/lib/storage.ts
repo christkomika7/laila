@@ -10,6 +10,7 @@ import { existsSync } from "fs";
 import { join } from "path";
 import {
   ensureDir,
+  fetchBuffer,
   generateFilename,
   getAllowedForOption,
   getMaxSize,
@@ -71,3 +72,17 @@ export const Storage = {
     return idx === -1 ? url : url.slice(idx + "/uploads/".length);
   },
 } as const;
+
+export async function readAudioBuffer(url: string): Promise<Buffer> {
+  // Si c'est une URL locale (notre serveur), on lit depuis le disque
+  if (url.includes("/uploads/")) {
+    const relativePath = Storage.pathFromUrl(url);
+    console.log({ relativePath });
+    const absolutePath = join(UPLOAD_DIR, relativePath);
+    const file = Bun.file(absolutePath);
+    const arrayBuffer = await file.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  }
+  // Sinon fetch HTTP normal (URL externe)
+  return fetchBuffer(url);
+}

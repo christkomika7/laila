@@ -78,7 +78,7 @@ const typeLabels: Record<string, string> = {
   donation: "Don",
 };
 
-export default function AdminInvoiceTab() {
+export default function UserInvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [startDate, setStartDate] = useState("");

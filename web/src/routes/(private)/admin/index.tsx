@@ -1,4 +1,5 @@
 import AdminAlbum from "#/components/admin/album";
+import AdminAnalyticsTab from "#/components/admin/analytics";
 import AdminClient from "#/components/admin/client";
 import { AdminMessagesTab } from "#/components/admin/contact-message";
 import { AdminGalleryTab } from "#/components/admin/gallery";
@@ -8,7 +9,6 @@ import Header from "#/components/header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "#/components/ui/tabs";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { BarChart, FileText, Mail, Package, Users } from "lucide-react";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/(private)/admin/")({
@@ -28,63 +28,7 @@ export const Route = createFileRoute("/(private)/admin/")({
   component: RouteComponent,
 });
 
-type Invoice = {
-  id: string;
-  invoiceNumber: string;
-  created: string;
-  total: number;
-  status: string;
-  expand: { userId: { email: string } };
-};
-
-const FAKE_INVOICES: Invoice[] = [
-  {
-    id: "inv1",
-    invoiceNumber: "INV-2024-001",
-    created: "2024-05-10T10:00:00Z",
-    total: 12.99,
-    status: "payée",
-    expand: { userId: { email: "marie.dupont@email.com" } },
-  },
-  {
-    id: "inv2",
-    invoiceNumber: "INV-2024-002",
-    created: "2024-05-12T14:30:00Z",
-    total: 9.99,
-    status: "payée",
-    expand: { userId: { email: "jean.martin@email.com" } },
-  },
-  {
-    id: "inv3",
-    invoiceNumber: "INV-2024-003",
-    created: "2024-05-18T09:15:00Z",
-    total: 24.97,
-    status: "en attente",
-    expand: { userId: { email: "sophie.leblanc@email.com" } },
-  },
-  {
-    id: "inv4",
-    invoiceNumber: "INV-2024-004",
-    created: "2024-06-01T16:45:00Z",
-    total: 7.99,
-    status: "payée",
-    expand: { userId: { email: "thomas.bernard@email.com" } },
-  },
-];
-
 function RouteComponent() {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-
-  const [unreadMessages] = useState(0);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = () => {
-    setInvoices(FAKE_INVOICES);
-  };
-
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -137,11 +81,6 @@ function RouteComponent() {
               >
                 <Mail className="h-4 w-4 mr-2" />
                 Messages
-                {unreadMessages > 0 && (
-                  <span className="absolute top-1 right-1 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full min-w-[16px] h-4 px-1 flex items-center justify-center transform translate-x-1/2 -translate-y-1/2">
-                    {unreadMessages}
-                  </span>
-                )}
               </TabsTrigger>
               <TabsTrigger
                 value="analytics"
@@ -184,35 +123,7 @@ function RouteComponent() {
 
             {/* ── Analytique ── */}
             <TabsContent value="analytics">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    Revenu Total
-                  </h3>
-                  <p className="text-3xl font-bold text-primary font-mono">
-                    $
-                    {invoices
-                      .reduce((sum, inv) => sum + inv.total, 0)
-                      .toFixed(2)}
-                  </p>
-                </div>
-                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    Total des Commandes
-                  </h3>
-                  <p className="text-3xl font-bold text-foreground font-mono">
-                    {invoices.length}
-                  </p>
-                </div>
-                <div className="bg-card rounded-md p-6 shadow-sm border border-border">
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    Clients
-                  </h3>
-                  <p className="text-3xl font-bold text-foreground font-mono">
-                    {/* {customers.length} */}
-                  </p>
-                </div>
-              </div>
+              <AdminAnalyticsTab />
             </TabsContent>
           </Tabs>
         </div>

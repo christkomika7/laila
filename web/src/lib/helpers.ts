@@ -2,6 +2,7 @@ import type { AlbumFormState, TrackFormState } from "#/types/album";
 import type { CheckoutPayload, CheckoutResponse } from "#/types/checkout";
 import type { State, Action } from "#/types/gallery";
 import apiServerClient from "./api";
+import { WORLD_COUNTRIES } from "./data";
 
 export function reducer(state: State, action: Action): State {
   switch (action.type) {
@@ -145,4 +146,8 @@ export async function callCheckout(
   }
 
   return data as CheckoutResponse;
+}
+
+export function getCountry(code: string) {
+  return WORLD_COUNTRIES.find((c) => c.code === code)?.name || "NC";
 }

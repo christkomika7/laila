@@ -115,6 +115,11 @@ function RouteComponent() {
                   required
                 />
               </div>
+              <div className="flex justify-end">
+                <Link to="/forgot-password" className="text-xs text-amber-500">
+                  Mot de passe oublié ?
+                </Link>
+              </div>
             </div>
 
             <Button

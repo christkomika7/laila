@@ -14,6 +14,7 @@ import { paymentStatusRoutes } from "./module/payment/payment";
 import { donationRoutes } from "./module/payment/donation";
 import { invoiceRoutes } from "./module/admin/invoice";
 import { purchasesRoutes } from "./module/admin/purchase";
+import { adminStatsRoutes } from "./module/admin/admin-stat";
 
 const app = new Elysia()
   .get("/", () => "Hello Elysia")
@@ -36,6 +37,7 @@ const app = new Elysia()
   .use(donationRoutes)
   .use(invoiceRoutes)
   .use(purchasesRoutes)
+  .use(adminStatsRoutes)
   .listen(env.PORT);
 
 console.log(

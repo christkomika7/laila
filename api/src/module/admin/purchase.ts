@@ -9,6 +9,7 @@ import {
   inferExt,
   safe,
 } from "../../lib/helpers";
+import { readAudioBuffer } from "../../lib/storage";
 
 async function requireUser(request: Request, set: any) {
   const session = await auth.api
@@ -99,8 +100,8 @@ export const purchasesRoutes = new Elysia({ prefix: "/purchases" })
         unitPriceInCents: item.unitPriceInCents,
         totalPriceInCents: item.unitPriceInCents * item.quantity,
         type: item.trackId ? "track" : item.albumId ? "album" : "product",
-        track: formatTrack(item.track) ?? null,
-        album: formatAlbum(item.album) ?? null,
+        track: item.track ? formatTrack(item.track) : null,
+        album: item.album ? formatAlbum(item.album) : null,
         product: item.variant
           ? { variantTitle: item.variant.title, ...item.variant.product }
           : null,
@@ -527,5 +528,110 @@ export const purchasesRoutes = new Elysia({ prefix: "/purchases" })
     },
     {
       query: t.Optional(t.Object({ orderId: t.Optional(t.String()) })),
+    },
+  )
+  .get(
+    "/download/item",
+    async ({ request, set, query }) => {
+      const session = await requireUser(request, set);
+      if (!session || "error" in session) return session;
+
+      const { type, id } = query;
+
+      const zip = new JSZip();
+
+      if (type === "album") {
+        const current = await prisma.album.findUnique({
+          where: { id },
+          include: {
+            tracks: {
+              where: { published: true },
+              orderBy: { title: "asc" },
+              select: {
+                id: true,
+                title: true,
+                fullAudioUrl: true,
+                coverUrl: true,
+              },
+            },
+          },
+        });
+
+        const album = formatAlbum(current);
+
+        if (!album) {
+          set.status = 404;
+          return { error: "Album introuvable." };
+        }
+
+        const albumFolder = zip.folder(safe(album.title))!;
+        if (album.coverUrl) {
+          try {
+            const buf = await readAudioBuffer(album.coverUrl);
+            const ext =
+              album.coverUrl.split("?")[0].match(/\.(jpe?g|png|webp)$/i)?.[1] ??
+              "jpg";
+            albumFolder.file(`cover.${ext}`, buf);
+          } catch {}
+        }
+        const pad = album.tracks.length >= 10 ? 2 : 1;
+        for (let i = 0; i < album.tracks.length; i++) {
+          try {
+            const buf = await readAudioBuffer(album.tracks[i].fullAudioUrl);
+            const ext = inferExt(album.tracks[i].fullAudioUrl);
+            albumFolder.file(
+              `${String(i + 1).padStart(pad, "0")} - ${safe(album.tracks[i].title)}.${ext}`,
+              buf,
+            );
+          } catch {}
+        }
+
+        const zipBuffer = await zip.generateAsync({
+          type: "arraybuffer",
+          compression: "DEFLATE",
+          compressionOptions: { level: 6 },
+        });
+        return new Response(zipBuffer, {
+          headers: {
+            "Content-Type": "application/zip",
+            "Content-Disposition": `attachment; filename="${safe(album.title)}.zip"`,
+            "Content-Length": String(zipBuffer.byteLength),
+          },
+        });
+      } else {
+        const current = await prisma.track.findUnique({ where: { id } });
+        const track = formatTrack(current);
+        if (!track) {
+          set.status = 404;
+          return { error: "Track introuvable." };
+        }
+
+        const singlesFolder = zip.folder("Singles")!;
+        try {
+          const audioBuf = await readAudioBuffer(track.fullAudioUrl);
+          const ext = inferExt(track.fullAudioUrl);
+          singlesFolder.file(`${safe(track.title)}.${ext}`, audioBuf);
+        } catch {}
+
+        const zipBuffer = await zip.generateAsync({
+          type: "arraybuffer",
+          compression: "DEFLATE",
+          compressionOptions: { level: 6 },
+        });
+
+        return new Response(zipBuffer, {
+          headers: {
+            "Content-Type": "application/zip",
+            "Content-Disposition": `attachment; filename="${safe(track.title)}.zip"`,
+            "Content-Length": String(zipBuffer.byteLength),
+          },
+        });
+      }
+    },
+    {
+      query: t.Object({
+        type: t.Union([t.Literal("album"), t.Literal("track")]),
+        id: t.String(),
+      }),
     },
   );

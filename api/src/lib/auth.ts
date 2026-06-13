@@ -30,6 +30,13 @@ export const auth = betterAuth({
         body: `Quelqu'un a essayé de créer un compte en utilisant votre adresse e-mail. Si c'est vous, essayez de vous connecter au lieu de cela. Sinon, vous pouvez simplement ignorer cet e-mail.`,
       });
     },
+    sendResetPassword: async ({ user, url }) => {
+      await sendMail({
+        to: user.email,
+        title: "Réinitialisation de mot de passe",
+        body: `Cliquez sur le lien pour réinitialiser votre mot de passe: ${url}`,
+      });
+    },
   },
   emailVerification: {
     sendVerificationEmail: async ({ user, token }) => {
