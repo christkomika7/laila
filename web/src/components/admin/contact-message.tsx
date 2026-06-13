@@ -13,25 +13,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import { Loader2, Mail, Phone, Tag, Trash2 } from "lucide-react";
 import { apiServerClient } from "#/lib/api";
-
-type MessageStatus = "NEW" | "READ";
-
-type Message = {
-  id: string;
-  name: string;
-  email: string;
-  phone?: string | null;
-  subject: string;
-  message: string;
-  status: MessageStatus;
-  createdAt: string;
-};
-
-const SUBJECT_LABELS: Record<string, string> = {
-  booking: "Booking",
-  press: "Prise de contact",
-  other: "Autres",
-};
+import type { Message } from "#/types/message";
+import { SUBJECT_LABELS } from "#/lib/constant";
 
 export function AdminMessagesTab() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -40,7 +23,6 @@ export function AdminMessagesTab() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
 
-  // Fetch all messages
   const fetchMessages = async () => {
     setLoading(true);
     try {

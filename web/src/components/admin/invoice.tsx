@@ -31,52 +31,8 @@ import {
 import { toast } from "sonner";
 import { Loader2, Eye, Trash2 } from "lucide-react";
 import { apiServerClient } from "#/lib/api";
-
-type InvoiceItem = {
-  title: string;
-  quantity: number;
-  unitPriceInCents: number;
-  coverUrl?: string;
-};
-
-type Invoice = {
-  id: string;
-  type: "payment" | "donation";
-  status: string;
-  provider: string;
-  totalInCents: number;
-  currency: string;
-  createdAt: string;
-  completedAt: string | null;
-  items?: InvoiceItem[];
-  customer?: {
-    name: string | null;
-    email: string | null;
-    country?: string;
-  } | null;
-  user?: { name: string | null; email: string | null } | null;
-  hide?: boolean;
-};
-
-const statusLabels: Record<string, string> = {
-  COMPLETED: "Payée",
-  PENDING: "En attente",
-  FAILED: "Échouée",
-  PROCESSING: "En cours",
-  CANCELLED: "Annulée",
-};
-
-const statusStyles: Record<string, string> = {
-  COMPLETED: "bg-green-500/10 text-green-600 border-green-500/20",
-  PENDING: "bg-yellow-500/10 text-yellow-600 border-yellow-500/20",
-  FAILED: "bg-red-500/10 text-red-600 border-red-500/20",
-  CANCELLED: "bg-gray-500/10 text-gray-600 border-gray-500/20",
-};
-
-const typeLabels: Record<string, string> = {
-  payment: "Paiement",
-  donation: "Don",
-};
+import type { Invoice } from "#/types/invoice";
+import { statusLabels, statusStyles, typeLabels } from "#/lib/constant";
 
 export default function AdminInvoiceTab() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -322,7 +278,6 @@ export default function AdminInvoiceTab() {
         )}
       </div>
 
-      {/* Modal détails facture */}
       <Dialog
         open={detailTarget !== null}
         onOpenChange={(open) => !open && setDetailTarget(null)}

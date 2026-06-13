@@ -27,7 +27,6 @@ export const Route = createFileRoute("/(auth)/reset-password")({
 function RouteComponent() {
   const navigate = useNavigate();
 
-  // ← Lire le token depuis l'URL au montage
   const token = new URLSearchParams(window.location.search).get("token");
 
   const [password, setPassword] = useState("");
