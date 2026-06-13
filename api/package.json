@@ -3,7 +3,13 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "build": "bun build src/index.ts --compile --outfile server",
+    "migrate:deploy": "bunx --bun prisma migrate deploy",
+    "migrate:dev": "bunx --bun prisma migrate dev",
+    "db:generate": "bunx --bun prisma generate",
+    "db:seed": "bunx --bun prisma db seed",
+    "pm2": "bun run build && pm2 start ./server --name laila-api && pm2 save"
   },
   "prisma": {
     "seed": "bun prisma/seed.ts"
@@ -14,10 +20,11 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@t3-oss/env-core": "^0.13.11",
-    "better-auth": "^1.6.14",
+    "better-auth": "^1.6.18",
     "dotenv": "^17.4.2",
     "elysia": "latest",
     "jszip": "^3.10.1",
+    "kysely": "^0.29.2",
     "nodemailer": "^8.0.10",
     "pg": "^8.21.0",
     "stripe": "^22.2.0",
