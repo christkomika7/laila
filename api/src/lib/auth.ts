@@ -9,6 +9,14 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
   trustedOrigins: [env.CLIENT_URL],
+  advanced: {
+    useSecureCookies: true,
+    cookiePrefix: "laila",
+    crossSubDomainCookies: {
+      enabled: true,
+      domain: env.DOMAIN,
+    },
+  },
   user: {
     additionalFields: {
       role: {

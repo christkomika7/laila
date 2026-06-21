@@ -4,7 +4,6 @@ import { prisma } from "./prisma";
 import { extractVariantId, isPhysicalProduct } from "./helpers";
 
 const XAF_TO_EUR_RATE = 655.957;
-const XOF_TO_EUR_RATE = 655.957;
 
 export const cartItemSchema = t.Object({
   variantId: t.String(),
