@@ -1,19 +1,34 @@
-import { defineConfig } from 'vite'
-import { devtools } from '@tanstack/devtools-vite'
+import { defineConfig, loadEnv } from "vite";
+import { devtools } from "@tanstack/devtools-vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 
-import { tanstackRouter } from '@tanstack/router-plugin/vite'
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
-import viteReact from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
 
-const config = defineConfig({
-  resolve: { tsconfigPaths: true },
-  plugins: [
-    devtools(),
-    tailwindcss(),
-    tanstackRouter({ target: 'react', autoCodeSplitting: true }),
-    viteReact(),
-  ],
-})
+  return {
+    plugins: [
+      devtools(),
+      tailwindcss(),
+      tanstackRouter({
+        target: "react",
+        autoCodeSplitting: true,
+      }),
+      viteReact(),
+    ],
 
-export default config
+    server: {
+      host: true,
+      port: Number(env.VITE_CLIENT_PORT),
+      allowedHosts: [env.VITE_DOMAIN],
+      proxy: {
+        "/api": {
+          target: env.VITE_SERVER_HOST,
+          changeOrigin: true,
+        },
+      },
+    },
+  };
+});
